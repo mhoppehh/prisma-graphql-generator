@@ -1,0 +1,44 @@
+
+type {{modelName}} {
+{{#each fields}}
+  {{name}}: {{type}}{{#if directives}}{{#each directives}} {{this}}{{/each}}{{/if}}
+{{/each}}
+}
+
+{{#if hasInputTypes}}
+{{#each inputTypes}}
+input {{name}} {
+{{#each fields}}
+  {{name}}: {{type}}{{#if required}}!{{/if}}
+{{/each}}
+}
+
+{{/each}}
+{{/if}}
+
+{{#if hasOutputTypes}}
+{{#each outputTypes}}
+type {{name}} {
+{{#each fields}}
+  {{name}}: {{type}}{{#if required}}!{{/if}}
+{{/each}}
+}
+
+{{/each}}
+{{/if}}
+
+{{#if hasQueries}}
+extend type Query {
+{{#each queries}}
+  {{name}}{{#if args}}({{args}}){{/if}}: {{returnType}}
+{{/each}}
+}
+{{/if}}
+
+{{#if hasMutations}}
+extend type Mutation {
+{{#each mutations}}
+  {{name}}{{#if args}}({{args}}){{/if}}: {{returnType}}
+{{/each}}
+}
+{{/if}}

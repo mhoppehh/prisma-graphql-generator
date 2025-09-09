@@ -1,0 +1,4 @@
+{
+  "MY_ENV_VAR": "value"
+  // TODO: Add more mock environment variables as needed
+}

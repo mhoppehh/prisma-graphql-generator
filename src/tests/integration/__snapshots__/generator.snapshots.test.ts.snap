@@ -1,0 +1,1135 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Generator Cartesian Product Snapshot Tests Core Generator Output Snapshots Generator output scenarios should generate correct output for Category with different-model: generator-output-Category-different-model 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "different-model",
+    "model": "Category",
+    "mutations": [],
+    "queries": [
+      "findMany",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Core Generator Output Snapshots Generator output scenarios should generate correct output for Employee with create-only: generator-output-Employee-create-only 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "create-only",
+    "model": "Employee",
+    "mutations": [
+      "create",
+    ],
+    "queries": [],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Core Generator Output Snapshots Generator output scenarios should generate correct output for Employee with findMany-only: generator-output-Employee-findMany-only 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "findMany-only",
+    "model": "Employee",
+    "mutations": [],
+    "queries": [
+      "findMany",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Core Generator Output Snapshots Generator output scenarios should generate correct output for Employee with findUnique-only: generator-output-Employee-findUnique-only 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "findUnique-only",
+    "model": "Employee",
+    "mutations": [],
+    "queries": [
+      "findUnique",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Core Generator Output Snapshots Generator output scenarios should generate correct output for Employee with mixed-operations: generator-output-Employee-mixed-operations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "mixed-operations",
+    "model": "Employee",
+    "mutations": [
+      "create",
+      "update",
+    ],
+    "queries": [
+      "findMany",
+      "findUnique",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests File Merging Scenarios File merging scenarios should handle fresh-mutation-only for Employee: file-merging-Employee-fresh-mutation-only 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "fresh-mutation-only",
+    "existingType": "none",
+    "model": "Employee",
+    "mutations": [
+      "create",
+    ],
+    "queries": [],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests File Merging Scenarios File merging scenarios should handle merge-with-existing-sdl for Employee: file-merging-Employee-merge-with-existing-sdl 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "merge-with-existing-sdl",
+    "existingType": "sdl",
+    "model": "Employee",
+    "mutations": [],
+    "queries": [
+      "findMany",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Multiple Query/Mutation Combinations Multiple operation scenarios should generate common-operations for Product: multi-ops-Product-common-operations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Product {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductWhereInput {
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductOrderByWithRelationInput {
+  CategoryId: SortOrder
+  Discontinued: SortOrder
+  Id: SortOrder
+  ProductName: SortOrder
+  QuantityPerUnit: SortOrder
+  ReorderLevel: SortOrder
+  SupplierId: SortOrder
+  UnitPrice: SortOrder
+  UnitsInStock: SortOrder
+  UnitsOnOrder: SortOrder
+}
+
+input ProductWhereUniqueInput {
+  Id: Int
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductCreateInput {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductUpdateInput {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+type Product {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+extend type Query {
+  productsFindMany(where: ProductWhereInput, orderBy: ProductOrderByWithRelationInput, cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: ProductScalarFieldEnum): [Product]
+  productFindUnique(where: ProductWhereUniqueInput!): Product!
+}
+
+extend type Mutation {
+  productCreate(data: ProductCreateInput!): Product
+  productUpdate(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product!
+}",
+      "filePath": "src/modules/Product.graphql",
+    },
+    {
+      "content": "import { ProductModule } from "./module-types"
+
+export const resolversProduct: ProductModule.Resolvers = {
+  Query: {
+    productsFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    productFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    productCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.create({
+        data: args.data,
+      });
+    },
+    productUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Product.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "common-operations",
+    "model": "Product",
+    "mutations": [
+      "create",
+      "update",
+    ],
+    "queries": [
+      "findMany",
+      "findUnique",
+    ],
+  },
+}
+`;
+
+exports[`Generator Cartesian Product Snapshot Tests Multiple Query/Mutation Combinations Multiple operation scenarios should generate minimal-operations for Category: multi-ops-Category-minimal-operations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "description": "minimal-operations",
+    "model": "Category",
+    "mutations": [
+      "update",
+    ],
+    "queries": [
+      "findUnique",
+    ],
+  },
+}
+`;

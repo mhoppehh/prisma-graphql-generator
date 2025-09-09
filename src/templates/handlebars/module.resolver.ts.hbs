@@ -1,0 +1,97 @@
+import { {{pascalCase modelName}}Module } from "./module-types"
+
+export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.Resolvers = {
+{{#if hasQueries}}
+  Query: {
+{{#each queries}}
+    {{name}}: async (_parent, args, context) => {
+      {{#if (eq operationType "findUnique")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.findUnique({
+        where: args.where,
+      });
+      {{else if (eq operationType "findFirst")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.findFirst({
+        where: args.where,
+      });
+      {{else if (eq operationType "findMany")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+      {{else if (eq operationType "count")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.count({
+        where: args.where,
+      });
+      {{else if (eq operationType "aggregate")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.aggregate({
+        where: args.where,
+        _count: args._count,
+        _avg: args._avg,
+        _sum: args._sum,
+        _min: args._min,
+        _max: args._max,
+      });
+      {{else if (eq operationType "groupBy")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.groupBy({
+        by: args.by,
+        where: args.where,
+        having: args.having,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+      {{else}}
+      throw new Error('{{name}} resolver not implemented');
+      {{/if}}
+    },
+{{/each}}
+  },
+{{/if}}
+
+{{#if hasMutations}}
+  Mutation: {
+{{#each mutations}}
+    {{name}}: async (_parent, args, context) => {
+      {{#if (eq operationType "create")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.create({
+        data: args.data,
+      });
+      {{else if (eq operationType "createMany")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.createMany({
+        data: args.data,
+        skipDuplicates: args.skipDuplicates,
+      });
+      {{else if (eq operationType "update")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.update({
+        where: args.where,
+        data: args.data,
+      });
+      {{else if (eq operationType "updateMany")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.updateMany({
+        where: args.where,
+        data: args.data,
+      });
+      {{else if (eq operationType "upsert")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.upsert({
+        where: args.where,
+        create: args.create,
+        update: args.update,
+      });
+      {{else if (eq operationType "delete")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.delete({
+        where: args.where,
+      });
+      {{else if (eq operationType "deleteMany")}}
+      return (await context.dataSources.prisma()).{{../modelNameLower}}.deleteMany({
+        where: args.where,
+      });
+      {{else}}
+      throw new Error('{{name}} resolver not implemented');
+      {{/if}}
+    },
+{{/each}}
+  },
+{{/if}}
+};

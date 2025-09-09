@@ -1,0 +1,4695 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Employee with operations {"queries":["findMany"],"mutations":["update"]}: practical-Employee-findMany-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}
+
+extend type Mutation {
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Employee with operations {"queries":["findMany"],"mutations":[]}: practical-Employee-findMany-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Employee with operations {"queries":["findUnique"],"mutations":[]}: practical-Employee-findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Employee with operations {"queries":[],"mutations":["create"]}: practical-Employee-noQueries-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Product with operations {"queries":["findMany"],"mutations":["update"]}: practical-Product-findMany-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Product {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductWhereInput {
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductOrderByWithRelationInput {
+  CategoryId: SortOrder
+  Discontinued: SortOrder
+  Id: SortOrder
+  ProductName: SortOrder
+  QuantityPerUnit: SortOrder
+  ReorderLevel: SortOrder
+  SupplierId: SortOrder
+  UnitPrice: SortOrder
+  UnitsInStock: SortOrder
+  UnitsOnOrder: SortOrder
+}
+
+input ProductWhereUniqueInput {
+  Id: Int
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductUpdateInput {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+type Product {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+extend type Query {
+  productsFindMany(where: ProductWhereInput, orderBy: ProductOrderByWithRelationInput, cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: ProductScalarFieldEnum): [Product]
+}
+
+extend type Mutation {
+  productUpdate(data: ProductUpdateInput!, where: ProductWhereUniqueInput!): Product!
+}",
+      "filePath": "src/modules/Product.graphql",
+    },
+    {
+      "content": "import { ProductModule } from "./module-types"
+
+export const resolversProduct: ProductModule.Resolvers = {
+  Query: {
+    productsFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    productUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Product.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Product",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Product with operations {"queries":["findMany"],"mutations":[]}: practical-Product-findMany-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Product {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductWhereInput {
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductOrderByWithRelationInput {
+  CategoryId: SortOrder
+  Discontinued: SortOrder
+  Id: SortOrder
+  ProductName: SortOrder
+  QuantityPerUnit: SortOrder
+  ReorderLevel: SortOrder
+  SupplierId: SortOrder
+  UnitPrice: SortOrder
+  UnitsInStock: SortOrder
+  UnitsOnOrder: SortOrder
+}
+
+
+type Product {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+extend type Query {
+  productsFindMany(where: ProductWhereInput, orderBy: ProductOrderByWithRelationInput, cursor: ProductWhereUniqueInput, take: Int, skip: Int, distinct: ProductScalarFieldEnum): [Product]
+}",
+      "filePath": "src/modules/Product.graphql",
+    },
+    {
+      "content": "import { ProductModule } from "./module-types"
+
+export const resolversProduct: ProductModule.Resolvers = {
+  Query: {
+    productsFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Product.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Product",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Product with operations {"queries":["findUnique"],"mutations":[]}: practical-Product-findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Product {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductWhereInput {
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+input ProductWhereUniqueInput {
+  Id: Int
+  AND: ProductWhereInput
+  OR: [ProductWhereInput!]
+  NOT: ProductWhereInput
+  CategoryId: Int
+  Discontinued: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+type Product {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+extend type Query {
+  productFindUnique(where: ProductWhereUniqueInput!): Product!
+}",
+      "filePath": "src/modules/Product.graphql",
+    },
+    {
+      "content": "import { ProductModule } from "./module-types"
+
+export const resolversProduct: ProductModule.Resolvers = {
+  Query: {
+    productFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Product.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Product",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Focused Test Combinations (Practical Examples) Practical test scenarios should generate files for Product with operations {"queries":[],"mutations":["create"]}: practical-Product-noQueries-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Product {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+input ProductCreateInput {
+  CategoryId: Int!
+  Discontinued: Int!
+  Id: Int!
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int!
+  SupplierId: Int!
+  UnitPrice: String!
+  UnitsInStock: Int!
+  UnitsOnOrder: Int!
+}
+
+
+type Product {
+  CategoryId: Int
+  Discontinued: Int
+  Id: Int
+  ProductName: String
+  QuantityPerUnit: String
+  ReorderLevel: Int
+  SupplierId: Int
+  UnitPrice: String
+  UnitsInStock: Int
+  UnitsOnOrder: Int
+}
+
+
+
+extend type Mutation {
+  productCreate(data: ProductCreateInput!): Product
+}",
+      "filePath": "src/modules/Product.graphql",
+    },
+    {
+      "content": "import { ProductModule } from "./module-types"
+
+export const resolversProduct: ProductModule.Resolvers = {
+
+  Mutation: {
+    productCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).product.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Product.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Product",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [], Mutations: [create,update]: cartesian-Category-noQueries-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [], Mutations: [create]: cartesian-Category-noQueries-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [], Mutations: [update]: cartesian-Category-noQueries-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+
+extend type Mutation {
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+
+  Mutation: {
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany,findUnique], Mutations: []: cartesian-Category-findMany,findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany,findUnique], Mutations: [create,update]: cartesian-Category-findMany,findUnique-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany,findUnique], Mutations: [create]: cartesian-Category-findMany,findUnique-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany,findUnique], Mutations: [update]: cartesian-Category-findMany,findUnique-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany], Mutations: []: cartesian-Category-findMany-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany], Mutations: [create,update]: cartesian-Category-findMany-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany], Mutations: [create]: cartesian-Category-findMany-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findMany], Mutations: [update]: cartesian-Category-findMany-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryOrderByWithRelationInput {
+  CategoryName: SortOrder
+  Description: SortOrder
+  Id: SortOrder
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoriesFindMany(where: CategoryWhereInput, orderBy: CategoryOrderByWithRelationInput, cursor: CategoryWhereUniqueInput, take: Int, skip: Int, distinct: CategoryScalarFieldEnum): [Category]
+}
+
+extend type Mutation {
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoriesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findUnique], Mutations: []: cartesian-Category-findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findUnique], Mutations: [create,update]: cartesian-Category-findUnique-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findUnique], Mutations: [create]: cartesian-Category-findUnique-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryCreateInput {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryCreate(data: CategoryCreateInput!): Category
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Category, Queries: [findUnique], Mutations: [update]: cartesian-Category-findUnique-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Category {
+  CategoryName: String
+  Description: String
+  Id: Int!
+}
+
+input CategoryWhereInput {
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+input CategoryWhereUniqueInput {
+  Id: Int
+  AND: CategoryWhereInput
+  OR: [CategoryWhereInput!]
+  NOT: CategoryWhereInput
+  CategoryName: String
+  Description: String
+}
+
+input CategoryUpdateInput {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+type Category {
+  CategoryName: String
+  Description: String
+  Id: Int
+}
+
+
+extend type Query {
+  categoryFindUnique(where: CategoryWhereUniqueInput!): Category!
+}
+
+extend type Mutation {
+  categoryUpdate(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category!
+}",
+      "filePath": "src/modules/Category.graphql",
+    },
+    {
+      "content": "import { CategoryModule } from "./module-types"
+
+export const resolversCategory: CategoryModule.Resolvers = {
+  Query: {
+    categoryFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    categoryUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).category.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Category.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Category",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [], Mutations: [create,update]: cartesian-Employee-noQueries-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [], Mutations: [create]: cartesian-Employee-noQueries-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [], Mutations: [update]: cartesian-Employee-noQueries-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+
+extend type Mutation {
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+
+  Mutation: {
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "none",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany,findUnique], Mutations: []: cartesian-Employee-findMany,findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany,findUnique], Mutations: [create,update]: cartesian-Employee-findMany,findUnique-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany,findUnique], Mutations: [create]: cartesian-Employee-findMany,findUnique-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany,findUnique], Mutations: [update]: cartesian-Employee-findMany,findUnique-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany,findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany], Mutations: []: cartesian-Employee-findMany-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany], Mutations: [create,update]: cartesian-Employee-findMany-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany], Mutations: [create]: cartesian-Employee-findMany-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findMany], Mutations: [update]: cartesian-Employee-findMany-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeOrderByWithRelationInput {
+  Address: SortOrder
+  BirthDate: SortOrder
+  City: SortOrder
+  Country: SortOrder
+  Extension: SortOrder
+  FirstName: SortOrder
+  HireDate: SortOrder
+  HomePhone: SortOrder
+  Id: SortOrder
+  LastName: SortOrder
+  Notes: SortOrder
+  Photo: SortOrder
+  PhotoPath: SortOrder
+  PostalCode: SortOrder
+  Region: SortOrder
+  ReportsTo: SortOrder
+  Title: SortOrder
+  TitleOfCourtesy: SortOrder
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeesFindMany(where: EmployeeWhereInput, orderBy: EmployeeOrderByWithRelationInput, cursor: EmployeeWhereUniqueInput, take: Int, skip: Int, distinct: EmployeeScalarFieldEnum): [Employee]
+}
+
+extend type Mutation {
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeesFindMany: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findMany({
+        where: args.where,
+        orderBy: args.orderBy,
+        take: args.take,
+        skip: args.skip,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findMany",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findUnique], Mutations: []: cartesian-Employee-findUnique-noMutations 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "none",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findUnique], Mutations: [create,update]: cartesian-Employee-findUnique-create,update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create,update",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findUnique], Mutations: [create]: cartesian-Employee-findUnique-create 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeCreateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeCreate(data: EmployeeCreateInput!): Employee
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeCreate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.create({
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "create",
+    "queries": "findUnique",
+  },
+}
+`;
+
+exports[`Cartesian Product Generator Tests Small Scale Cartesian Product Tests Generated combination tests should generate files for Model: Employee, Queries: [findUnique], Mutations: [update]: cartesian-Employee-findUnique-update 1`] = `
+{
+  "files": [
+    {
+      "content": "type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int!
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereInput {
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeWhereUniqueInput {
+  Id: Int
+  AND: EmployeeWhereInput
+  OR: [EmployeeWhereInput!]
+  NOT: EmployeeWhereInput
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+input EmployeeUpdateInput {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+type Employee {
+  Address: String
+  BirthDate: String
+  City: String
+  Country: String
+  Extension: String
+  FirstName: String
+  HireDate: String
+  HomePhone: String
+  Id: Int
+  LastName: String
+  Notes: String
+  Photo: String
+  PhotoPath: String
+  PostalCode: String
+  Region: String
+  ReportsTo: Int
+  Title: String
+  TitleOfCourtesy: String
+}
+
+
+extend type Query {
+  employeeFindUnique(where: EmployeeWhereUniqueInput!): Employee!
+}
+
+extend type Mutation {
+  employeeUpdate(data: EmployeeUpdateInput!, where: EmployeeWhereUniqueInput!): Employee!
+}",
+      "filePath": "src/modules/Employee.graphql",
+    },
+    {
+      "content": "import { EmployeeModule } from "./module-types"
+
+export const resolversEmployee: EmployeeModule.Resolvers = {
+  Query: {
+    employeeFindUnique: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.findUnique({
+        where: args.where,
+      });
+    },
+  },
+
+  Mutation: {
+    employeeUpdate: async (_parent, args, context) => {
+      return (await context.dataSources.prisma()).employee.update({
+        where: args.where,
+        data: args.data,
+      });
+    },
+  },
+};",
+      "filePath": "src/modules/Employee.resolver.ts",
+    },
+  ],
+  "scenario": {
+    "model": "Employee",
+    "modulePath": "./src/modules",
+    "mutations": "update",
+    "queries": "findUnique",
+  },
+}
+`;
