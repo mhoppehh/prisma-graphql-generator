@@ -1,8 +1,8 @@
 import { generateGraphqlModule } from '../helpers'
 import { GenerateModuleOptions } from '../types/newTypes'
 import { fileExists } from '../utils/fileExists'
-import { config as generatorConfig } from '../config/generator.config'
-import patchedOptions from './__fixtures__/generated/options.patched'
+import { config as generatorConfig } from '../config/config'
+import patchedOptions from './__fixtures__/options.patched'
 
 // Mock dependencies
 jest.mock('../utils/fileExists')

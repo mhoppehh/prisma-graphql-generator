@@ -1,0 +1,25 @@
+{
+  "employee-sdl-queries-mutations": {
+    "modelName": "Employee",
+    "moduleFolderPath": "src/subgraphs/employee",
+    "operations": [
+      "sdl",
+      "queries",
+      "mutations"
+    ],
+    "queries": [
+      "findUnique",
+      "findMany"
+    ],
+    "mutations": [
+      "create",
+      "update",
+      "delete"
+    ],
+    "existingFiles": {
+      "sdl": false,
+      "queries": [],
+      "mutations": []
+    }
+  }
+}

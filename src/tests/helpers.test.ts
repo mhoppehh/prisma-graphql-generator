@@ -1,6 +1,6 @@
 import * as helpers from '../helpers'
 import { formatFile } from '../utils/formatFile'
-import patchedOptions from './__fixtures__/generated/options.patched'
+import patchedOptions from './__fixtures__/options.patched'
 import { GenerateModuleOptions } from '../types/newTypes'
 
 // Mock formatFile to avoid Prettier dependency in tests

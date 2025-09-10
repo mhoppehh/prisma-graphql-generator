@@ -3,7 +3,7 @@
  */
 
 import path from 'path'
-import { ConfigLoader, GeneratorConfig } from './generator.config'
+import { ConfigLoader, GeneratorConfig, PartialGeneratorConfig } from './config'
 
 /**
  * Load configuration from various sources with fallback priority:
@@ -64,7 +64,7 @@ export function getConfigPath(): string | undefined {
 /**
  * Validate that a configuration object has required fields
  */
-export function validateConfiguration(config: Partial<GeneratorConfig>): string[] {
+export function validateConfiguration(config: PartialGeneratorConfig): string[] {
   const errors: string[] = []
 
   // Validate required generator fields

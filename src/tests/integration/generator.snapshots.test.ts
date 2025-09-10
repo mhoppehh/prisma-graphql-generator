@@ -17,7 +17,7 @@ import { readExistingFile } from '../../utils/readExistingFile'
 import { writeFileSafely } from '../../utils/writeFileSafely'
 import { generateParameterCombinations } from '../../utils/testCombinatorics'
 import path from 'path'
-import options from '../__fixtures__/generated/options.patched'
+import options from '../__fixtures__/options.patched'
 
 jest.mock('prettier', () => ({
   format: (content: string) => content,

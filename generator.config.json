@@ -1,23 +1,56 @@
 {
   "generator": {
-    "prettyName": "My Custom GraphQL Generator",
-    "defaultOutput": "./generated"
+    "prettyName": "Prisma GraphQL Generator",
+    "defaultOutput": "../generated"
   },
   "files": {
     "extensions": {
       "graphql": ".graphql",
-      "resolver": ".resolvers.ts"
+      "resolver": ".ts"
     },
     "templates": {
-      "graphqlTemplate": "custom-templates/schema.hbs",
-      "resolverTemplate": "custom-templates/resolvers.hbs"
+      "graphqlTemplate": "templates/handlebars/module.graphql.hbs",
+      "resolverTemplate": "templates/handlebars/module.resolver.ts.hbs"
     },
-    "baseGraphqlPath": "src/schema/base.graphql"
+    "fallbackFiles": {
+      "schemaTs": "schema.ts",
+      "schemaGraphql": "schema.graphql",
+      "optionsJson": "options.json"
+    },
+    "baseGraphqlPath": "src/subgraphs/base.graphql",
+    "baseModulePath": "src/subgraphs/"
+  },
+  "envVars": {
+    "model": "GENERATOR_MODEL",
+    "modulePath": "GENERATOR_MODULE_PATH",
+    "operations": "GENERATOR_OPERATIONS",
+    "queries": "GENERATOR_QUERIES",
+    "mutations": "GENERATOR_MUTATIONS",
+    "presetUsed": "GENERATOR_PRESET_USED",
+    "timestamp": "GENERATOR_TIMESTAMP",
+    "customPlurals": "GENERATOR_CUSTOM_PLURALS"
   },
   "content": {
+    "fallbackMessages": {
+      "basic": "",
+      "withOperations": ""
+    },
     "resolverImplementation": {
-      "dataSourceMethod": "context.prisma",
-      "errorMessageTemplate": "Operation {operationName} is not implemented yet"
+      "dataSourceMethod": "context.dataSources.prisma()",
+      "errorMessageTemplate": "{operationName} resolver not implemented"
+    }
+  },
+  "typeMappings": {
+    "prismaToGraphQL": {
+      "Int": "Int",
+      "String": "String",
+      "Boolean": "Boolean",
+      "Float": "Float",
+      "DateTime": "DateTime",
+      "Json": "JSON",
+      "Decimal": "Float",
+      "BigInt": "BigInt",
+      "Bytes": "Bytes"
     }
   }
 }

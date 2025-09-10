@@ -1,7 +1,0 @@
-# Base GraphQL schema
-# This file contains shared types and enums
-
-enum SortOrder {
-  asc
-  desc
-}

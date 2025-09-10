@@ -1,10 +1,4 @@
 
-type {{modelName}} {
-{{#each fields}}
-  {{name}}: {{type}}{{#if directives}}{{#each directives}} {{this}}{{/each}}{{/if}}
-{{/each}}
-}
-
 {{#if hasInputTypes}}
 {{#each inputTypes}}
 input {{name}} {

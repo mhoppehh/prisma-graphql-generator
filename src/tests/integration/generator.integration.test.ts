@@ -23,7 +23,7 @@ import { fileExists } from '../../utils/fileExists'
 import { readExistingFile } from '../../utils/readExistingFile'
 import { writeFileSafely } from '../../utils/writeFileSafely'
 import { generateParameterCombinations } from '../../utils/testCombinatorics'
-import options from '../__fixtures__/generated/options.patched'
+import options from '../__fixtures__/options.patched'
 
 jest.mock('prettier', () => ({
   format: (content: string) => content,
@@ -176,18 +176,18 @@ describe('Generator Integration Tests', () => {
     models: {
       values: [
         'Employee',
-        // 'Category', 
-        // 'Customer',
-        // 'Order',
-        // 'Product',
-        // 'Supplier',
-        // 'Region',
-        // 'Territory',
-        // 'EmployeeTerritory',
-        // 'Shipper',
-        // 'OrderDetail',
-        // 'CustomerCustomerDemo',
-        // 'CustomerDemographic'
+        'Category', 
+        'Customer',
+        'Order',
+        'Product',
+        'Supplier',
+        'Region',
+        'Territory',
+        'EmployeeTerritory',
+        'Shipper',
+        'OrderDetail',
+        'CustomerCustomerDemo',
+        'CustomerDemographic'
       ],
       multi: false // Single choice - one model at a time
     },

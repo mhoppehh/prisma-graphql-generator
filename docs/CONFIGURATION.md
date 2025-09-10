@@ -86,7 +86,7 @@ Create a `generator.config.ts` file:
 ```typescript
 import { GeneratorConfig } from '@your-org/prisma-graphql-generator'
 
-const config: Partial<GeneratorConfig> = {
+const config: PartialGeneratorConfig = {
   generator: {
     prettyName: 'TypeScript GraphQL Generator',
     defaultOutput: './src/generated'

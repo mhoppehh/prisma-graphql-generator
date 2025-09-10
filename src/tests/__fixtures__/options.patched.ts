@@ -1,7 +1,7 @@
 import { GeneratorOptions } from '@prisma/generator-helper'
 
 // Import the original options
-import rawOptions from './options'
+import rawOptions from './generated/options'
 
 // Helper to convert string kind to FieldKind enum
 const fieldKind = (kind: string) => {

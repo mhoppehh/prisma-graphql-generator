@@ -18,7 +18,7 @@ import {
   mapOperationToPrismaFunc,
   GraphQLTypes,
 } from './types/newTypes'
-import { config as generatorConfig } from './config/generator.config'
+import { config as generatorConfig } from './config/config'
 import { fileExists } from './utils/fileExists'
 import { formatFile } from './utils/formatFile'
 import {
@@ -28,6 +28,7 @@ import {
   singularize,
 } from './utils/strings'
 import { writeFileSafely } from './utils/writeFileSafely'
+import { executeHook, HookContext } from './plugins'
 
 // --- Handlebars Helpers ---
 Handlebars.registerHelper('eq', function (a, b) {
@@ -432,26 +433,39 @@ export async function generateGraphqlModule(
   const sdlPath = path.join(modulePath, `${model.name}${configData.files.extensions.graphql}`)
   const resolverPath = path.join(modulePath, `${model.name}${configData.files.extensions.resolver}`)
 
+  // Execute hook for options created
+  const hookContext = await executeHook('onOptionsCreated', {
+    stage: 'onOptionsCreated',
+    timestamp: new Date(),
+    moduleOptions: options,
+    metadata: {}
+  })
+
+  // Use potentially modified options
+  const finalOptions = hookContext.moduleOptions || options
+
   const sdlExists = await fileExists(sdlPath)
   const resolverExists = await fileExists(resolverPath)
 
+  // Handle SDL generation
   if (sdlExists) {
-    await updateSdlFile(sdlPath, options)
+    await updateSdlFile(sdlPath, finalOptions)
   } else {
     await compileTemplateFile(
       sdlPath,
       configData.files.templates.graphqlTemplate,
-      options,
+      finalOptions,
     )
   }
 
+  // Handle resolver generation
   if (resolverExists) {
-    await updateResolverFile(resolverPath, options)
+    await updateResolverFile(resolverPath, finalOptions)
   } else {
     await compileTemplateFile(
       resolverPath,
       configData.files.templates.resolverTemplate,
-      options,
+      finalOptions,
     )
   }
 }
@@ -500,6 +514,18 @@ async function compileTemplateFile(
     returnTypes,
   )
 
+  // Execute hook for types generated
+  const typesHookContext = await executeHook('onTypesGenerated', {
+    stage: 'onTypesGenerated',
+    timestamp: new Date(),
+    moduleOptions: options,
+    graphqlTypes: types,
+    metadata: {}
+  })
+
+  // Use potentially modified types
+  const finalTypes = typesHookContext.graphqlTypes || types
+
   const templateData: HandlebarsTemplateData = {
     modelName: model.name,
     modelNameLower,
@@ -510,22 +536,58 @@ async function compileTemplateFile(
     mutations: mutationsData,
     hasQueries: queries.length > 0,
     hasMutations: mutations.length > 0,
-    inputTypes: types.input,
-    outputTypes: types.output,
-    hasInputTypes: types.input.length > 0,
-    hasOutputTypes: types.output.length > 0,
+    inputTypes: finalTypes.input,
+    outputTypes: finalTypes.output,
+    hasInputTypes: finalTypes.input.length > 0,
+    hasOutputTypes: finalTypes.output.length > 0,
     camelCase: (str: string) => str.charAt(0).toLowerCase() + str.slice(1),
     pascalCase: (str: string) => str.charAt(0).toUpperCase() + str.slice(1),
     dataSourceMethod: configData.content.resolverImplementation.dataSourceMethod,
     errorMessageTemplate: configData.content.resolverImplementation.errorMessageTemplate,
   }
 
+  // Execute hook for template data prepared
+  const templateDataHookContext = await executeHook('onTemplateDataPrepared', {
+    stage: 'onTemplateDataPrepared',
+    timestamp: new Date(),
+    moduleOptions: options,
+    templateData: templateData,
+    metadata: {}
+  })
+
+  // Use potentially modified template data
+  const finalTemplateData = templateDataHookContext.templateData || templateData
+
   const templatePath = path.join(__dirname, templateFilePath)
   const templateContent = await fs.readFile(templatePath, 'utf-8')
   const template = Handlebars.compile(templateContent)
-  const renderedContent = template(templateData)
+  const renderedContent = template(finalTemplateData)
 
-  await writeFileSafely(filePath, renderedContent)
+  // Execute hook for content generated (SDL or Resolver)
+  const isSDL = filePath.endsWith('.graphql')
+  const contentHookContext = await executeHook(isSDL ? 'onSDLGenerated' : 'onResolverGenerated', {
+    stage: isSDL ? 'onSDLGenerated' : 'onResolverGenerated',
+    timestamp: new Date(),
+    moduleOptions: options,
+    generatedContent: renderedContent,
+    filePath: filePath,
+    metadata: {}
+  })
+
+  // Use potentially modified content
+  const finalContent = contentHookContext.generatedContent || renderedContent
+
+  await writeFileSafely(filePath, finalContent)
+  
+  // Execute hook for file written
+  await executeHook('onFileWritten', {
+    stage: 'onFileWritten',
+    timestamp: new Date(),
+    moduleOptions: options,
+    filePath: filePath,
+    metadata: {}
+  })
+  
   await formatFile(filePath)
 }
 
@@ -800,7 +862,31 @@ async function updateSdlFile(
     },
   })
 
-  await writeFileSafely(filePath, print(modifiedAst))
+  const modifiedContent = print(modifiedAst)
+
+  // Execute hook for SDL generated
+  const contentHookContext = await executeHook('onSDLGenerated', {
+    stage: 'onSDLGenerated',
+    timestamp: new Date(),
+    moduleOptions: options,
+    generatedContent: modifiedContent,
+    filePath: filePath,
+    metadata: {}
+  })
+
+  // Use potentially modified content
+  const finalContent = contentHookContext.generatedContent || modifiedContent
+
+  await writeFileSafely(filePath, finalContent)
+  
+  // Execute hook for file written
+  await executeHook('onFileWritten', {
+    stage: 'onFileWritten',
+    timestamp: new Date(),
+    moduleOptions: options,
+    filePath: filePath,
+    metadata: {}
+  })
 }
 
 async function updateResolverFile(
@@ -1012,7 +1098,34 @@ async function updateResolverFile(
     }
   }
 
+  const modifiedContent = sourceFile.getFullText()
+
+  // Execute hook for resolver generated
+  const contentHookContext = await executeHook('onResolverGenerated', {
+    stage: 'onResolverGenerated',
+    timestamp: new Date(),
+    moduleOptions: options,
+    generatedContent: modifiedContent,
+    filePath: filePath,
+    metadata: {}
+  })
+
+  // If content was modified by hook, write it back to the source file
+  if (contentHookContext.generatedContent && contentHookContext.generatedContent !== modifiedContent) {
+    sourceFile.replaceWithText(contentHookContext.generatedContent)
+  }
+
   await sourceFile.save()
+  
+  // Execute hook for file written
+  await executeHook('onFileWritten', {
+    stage: 'onFileWritten',
+    timestamp: new Date(),
+    moduleOptions: options,
+    filePath: filePath,
+    metadata: {}
+  })
+  
   await formatFile(filePath)
 }
 
@@ -1032,8 +1145,20 @@ export async function generateGraphQLFiles(
     throw new Error(`Model ${config.modelName} not found in DMMF`)
   }
 
+  // Execute hook for model found
+  const modelHookContext = await executeHook('onModelFound', {
+    stage: 'onModelFound',
+    timestamp: new Date(),
+    dmmf: dmmf,
+    model: model,
+    metadata: {}
+  })
+
+  // Use potentially modified model
+  const finalModel = modelHookContext.model || model
+
   const options: GenerateModuleOptions = {
-    model,
+    model: finalModel,
     queries: config.queries,
     mutations: config.mutations,
     modulePath: config.modulePath,

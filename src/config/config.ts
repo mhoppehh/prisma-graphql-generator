@@ -1,5 +1,8 @@
 import fs from 'fs/promises'
+import { existsSync, readFileSync } from 'fs'
 import path from 'path'
+
+import defaultConfig from './config.default'
 
 /**
  * Configuration interface for the Prisma GraphQL Generator
@@ -27,6 +30,8 @@ export interface GeneratorConfig {
       optionsJson: string
     }
     baseGraphqlPath: string
+    baseModulePath: string
+    presetsFilePath: string
   }
 
   // Environment variables
@@ -59,66 +64,23 @@ export interface GeneratorConfig {
   }
 }
 
-/**
- * Default configuration for the Prisma GraphQL Generator
- */
-export const defaultConfig: GeneratorConfig = {
-  generator: {
-    prettyName: 'Prisma GraphQL Generator',
-    defaultOutput: '../generated'
-  },
-
-  files: {
-    extensions: {
-      graphql: '.graphql',
-      resolver: '.resolver.ts'
-    },
-    templates: {
-      graphqlTemplate: 'templates/handlebars/module.graphql.hbs',
-      resolverTemplate: 'templates/handlebars/module.resolver.ts.hbs'
-    },
-    fallbackFiles: {
-      schemaTs: 'schema.ts',
-      schemaGraphql: 'schema.graphql',
-      optionsJson: 'options.json'
-    },
-    baseGraphqlPath: 'src/subgraphs/base.graphql'
-  },
-
-  envVars: {
-    model: 'GENERATOR_MODEL',
-    modulePath: 'GENERATOR_MODULE_PATH',
-    operations: 'GENERATOR_OPERATIONS',
-    queries: 'GENERATOR_QUERIES',
-    mutations: 'GENERATOR_MUTATIONS',
-    presetUsed: 'GENERATOR_PRESET_USED',
-    timestamp: 'GENERATOR_TIMESTAMP',
-    customPlurals: 'GENERATOR_CUSTOM_PLURALS'
-  },
-
-  content: {
-    fallbackMessages: {
-      basic: '// GraphQL generator fallback - please use specific model generation',
-      withOperations: '// GraphQL generator fallback - please use specific model generation with queries or mutations'
-    },
-    resolverImplementation: {
-      dataSourceMethod: 'context.dataSources.prisma()',
-      errorMessageTemplate: '{operationName} resolver not implemented'
-    }
-  },
-
-  typeMappings: {
-    prismaToGraphQL: {
-      Int: 'Int',
-      String: 'String',
-      Boolean: 'Boolean',
-      Float: 'Float',
-      DateTime: 'DateTime',
-      Json: 'JSON',
-      Decimal: 'Float',
-      BigInt: 'BigInt',
-      Bytes: 'Bytes'
-    }
+export interface PartialGeneratorConfig {
+  generator?: Partial<GeneratorConfig['generator']>
+  files?: {
+    extensions?: Partial<GeneratorConfig['files']['extensions']>
+    templates?: Partial<GeneratorConfig['files']['templates']>
+    fallbackFiles?: Partial<GeneratorConfig['files']['fallbackFiles']>
+    baseGraphqlPath?: string
+    baseModulePath?: string
+    presetsFilePath?: string
+  }
+  envVars?: Partial<GeneratorConfig['envVars']>
+  content?: {
+    fallbackMessages?: Partial<GeneratorConfig['content']['fallbackMessages']>
+    resolverImplementation?: Partial<GeneratorConfig['content']['resolverImplementation']>
+  }
+  typeMappings?: {
+    prismaToGraphQL?: GeneratorConfig['typeMappings']['prismaToGraphQL']
   }
 }
 
@@ -128,21 +90,36 @@ export const defaultConfig: GeneratorConfig = {
 export class ConfigLoader {
   private config: GeneratorConfig
 
-  constructor(userConfig?: Partial<GeneratorConfig>) {
-    this.config = this.mergeConfig(defaultConfig, userConfig || {})
+  constructor(userConfig?: PartialGeneratorConfig) {
+    // Determine final user config: use provided or attempt to load generator.config.json
+    let finalUserConfig: PartialGeneratorConfig = {}
+    if (userConfig) {
+      finalUserConfig = userConfig
+    } else {
+      const configPath = path.resolve(process.cwd(), 'generator.config.json')
+      if (existsSync(configPath)) {
+        try {
+          const content = readFileSync(configPath, 'utf-8')
+          finalUserConfig = JSON.parse(content)
+        } catch (error) {
+          console.warn(`Failed to load generator.config.json, using defaults:`, error)
+        }
+      }
+    }
+    this.config = this.mergeConfig(defaultConfig, finalUserConfig)
   }
 
   getConfig(): GeneratorConfig {
     return this.config
   }
 
-  updateConfig(updates: Partial<GeneratorConfig>): void {
+  updateConfig(updates: PartialGeneratorConfig): void {
     this.config = this.mergeConfig(this.config, updates)
   }
 
   private mergeConfig(
     base: GeneratorConfig,
-    overrides: Partial<GeneratorConfig>
+    overrides: PartialGeneratorConfig
   ): GeneratorConfig {
     return {
       generator: { ...base.generator, ...overrides.generator },
@@ -150,7 +127,10 @@ export class ConfigLoader {
         extensions: { ...base.files.extensions, ...overrides.files?.extensions },
         templates: { ...base.files.templates, ...overrides.files?.templates },
         fallbackFiles: { ...base.files.fallbackFiles, ...overrides.files?.fallbackFiles },
-        baseGraphqlPath: overrides.files?.baseGraphqlPath || base.files.baseGraphqlPath
+        baseGraphqlPath: overrides.files?.baseGraphqlPath || base.files.baseGraphqlPath,
+        baseModulePath: overrides.files?.baseModulePath || base.files.baseModulePath,
+        presetsFilePath: overrides.files?.presetsFilePath || base.files.presetsFilePath
+
       },
       envVars: { ...base.envVars, ...overrides.envVars },
       content: {
@@ -171,7 +151,7 @@ export class ConfigLoader {
       const fullPath = path.resolve(configPath)
       const configContent = await fs.readFile(fullPath, 'utf-8')
       
-      let userConfig: Partial<GeneratorConfig>
+      let userConfig: PartialGeneratorConfig
       
       if (configPath.endsWith('.json')) {
         userConfig = JSON.parse(configContent)
@@ -194,7 +174,7 @@ export class ConfigLoader {
    * Load configuration from environment variables
    */
   static loadFromEnv(): ConfigLoader {
-    const envConfig: Partial<GeneratorConfig> = {}
+    const envConfig: PartialGeneratorConfig = {}
 
     if (process.env.GENERATOR_DEFAULT_OUTPUT) {
       envConfig.generator = { 

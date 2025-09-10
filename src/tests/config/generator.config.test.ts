@@ -1,4 +1,5 @@
-import { ConfigLoader, defaultConfig, GeneratorConfig } from '../../config/generator.config'
+import { ConfigLoader, PartialGeneratorConfig } from '../../config/config'
+import defaultConfig from '../../config/config.default'
 
 describe('ConfigLoader', () => {
   let originalEnv: NodeJS.ProcessEnv
@@ -27,7 +28,7 @@ describe('ConfigLoader', () => {
     })
 
     it('should merge user config with defaults', () => {
-      const userConfig: Partial<GeneratorConfig> = {
+      const userConfig: PartialGeneratorConfig = {
         generator: {
           prettyName: 'Custom Generator',
           defaultOutput: './custom-output'
@@ -42,7 +43,7 @@ describe('ConfigLoader', () => {
     })
 
     it('should deeply merge nested configurations', () => {
-      const userConfig: Partial<GeneratorConfig> = {
+      const userConfig: PartialGeneratorConfig = {
         files: {
           extensions: {
             graphql: '.gql',
@@ -50,7 +51,8 @@ describe('ConfigLoader', () => {
           },
           templates: defaultConfig.files.templates,
           fallbackFiles: defaultConfig.files.fallbackFiles,
-          baseGraphqlPath: 'custom/path/base.graphql'
+          baseGraphqlPath: 'custom/path/base.graphql',
+          presetsFilePath: 'custom/path/presets.json'
         }
       }
       
@@ -117,7 +119,7 @@ describe('ConfigLoader', () => {
 
   describe('type mappings', () => {
     it('should allow custom type mappings', () => {
-      const userConfig: Partial<GeneratorConfig> = {
+      const userConfig: PartialGeneratorConfig = {
         typeMappings: {
           prismaToGraphQL: {
             Int: 'Integer',
@@ -144,7 +146,7 @@ describe('ConfigLoader', () => {
 
   describe('content configuration', () => {
     it('should allow custom fallback messages', () => {
-      const userConfig: Partial<GeneratorConfig> = {
+      const userConfig: PartialGeneratorConfig = {
         content: {
           fallbackMessages: {
             basic: 'Custom basic fallback',
@@ -162,7 +164,7 @@ describe('ConfigLoader', () => {
     })
 
     it('should allow custom resolver implementation settings', () => {
-      const userConfig: Partial<GeneratorConfig> = {
+      const userConfig: PartialGeneratorConfig = {
         content: {
           fallbackMessages: defaultConfig.content.fallbackMessages,
           resolverImplementation: {

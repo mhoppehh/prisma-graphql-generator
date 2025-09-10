@@ -4,7 +4,8 @@ import {
   validateConfiguration,
   debugConfiguration
 } from '../../config/config.utils'
-import { GeneratorConfig, defaultConfig } from '../../config/generator.config'
+import { PartialGeneratorConfig } from '../../config/config'
+import defaultConfig from '../../config/config.default'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 
@@ -136,7 +137,7 @@ describe('config.utils', () => {
 
   describe('validateConfiguration', () => {
     it('should return no errors for valid configuration', () => {
-      const validConfig: Partial<GeneratorConfig> = {
+      const validConfig: PartialGeneratorConfig = {
         generator: {
           prettyName: 'Valid Generator',
           defaultOutput: './output'
@@ -165,7 +166,7 @@ describe('config.utils', () => {
     })
 
     it('should return errors for invalid generator configuration', () => {
-      const invalidConfig: Partial<GeneratorConfig> = {
+      const invalidConfig: PartialGeneratorConfig = {
         generator: {
           prettyName: 'Test',
           defaultOutput: '' // Empty output
@@ -178,7 +179,7 @@ describe('config.utils', () => {
     })
 
     it('should validate file extensions', () => {
-      const invalidConfig: Partial<GeneratorConfig> = {
+      const invalidConfig: PartialGeneratorConfig = {
         files: {
           extensions: {
             graphql: 'graphql', // Missing dot
@@ -193,7 +194,8 @@ describe('config.utils', () => {
             schemaGraphql: 'schema.graphql',
             optionsJson: 'options.json'
           },
-          baseGraphqlPath: 'base.graphql'
+          baseGraphqlPath: 'base.graphql',
+          presetsFilePath: 'presets.json'
         }
       }
       
@@ -204,7 +206,7 @@ describe('config.utils', () => {
     })
 
     it('should validate template paths', () => {
-      const invalidConfig: Partial<GeneratorConfig> = {
+      const invalidConfig: PartialGeneratorConfig = {
         files: {
           extensions: {
             graphql: '.graphql',
@@ -219,7 +221,9 @@ describe('config.utils', () => {
             schemaGraphql: 'schema.graphql',
             optionsJson: 'options.json'
           },
-          baseGraphqlPath: 'base.graphql'
+          baseGraphqlPath: 'base.graphql',
+          presetsFilePath: 'presets.json'
+
         }
       }
       

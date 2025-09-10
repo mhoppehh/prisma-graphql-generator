@@ -1,10 +1,38 @@
 #!/usr/bin/env node
 import inquirer from 'inquirer';
 import { spawn } from 'child_process';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const PRESETS_FILE = './scripts/generator-presets.json';
+import { config as generatorConfig } from './src/config/config'
+
+// Type definitions
+interface PrismaModel {
+  name: string;
+  value: string;
+  description: string;
+}
+
+interface ExistingFiles {
+  sdl: boolean;
+  queries: string[];
+  mutations: string[];
+}
+
+interface GeneratorConfig {
+  modelName: string;
+  moduleFolderPath: string;
+  operations: string[];
+  queries: string[];
+  mutations: string[];
+  existingFiles?: ExistingFiles;
+}
+
+interface Presets {
+  [key: string]: GeneratorConfig;
+}
+
+const configData = generatorConfig.getConfig()
 
 // Show usage help
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
@@ -28,7 +56,7 @@ Options:
 // List presets
 if (process.argv.includes('--list') || process.argv.includes('-l')) {
   try {
-    const data = fs.readFileSync(PRESETS_FILE, 'utf8');
+    const data = fs.readFileSync(configData.files.presetsFilePath, 'utf8');
     const presets = JSON.parse(data);
     const presetNames = Object.keys(presets);
     
@@ -47,20 +75,20 @@ if (process.argv.includes('--list') || process.argv.includes('-l')) {
   process.exit(0);
 }
 
-async function loadPresets() {
+async function loadPresets(): Promise<Presets> {
   try {
-    const data = fs.readFileSync(PRESETS_FILE, 'utf8');
+    const data = fs.readFileSync(configData.files.presetsFilePath, 'utf8');
     return JSON.parse(data);
   } catch {
     return {};
   }
 }
 
-async function savePresets(presets) {
-  fs.writeFileSync(PRESETS_FILE, JSON.stringify(presets, null, 2));
+async function savePresets(presets: Presets): Promise<void> {
+  fs.writeFileSync(configData.files.presetsFilePath, JSON.stringify(presets, null, 2));
 }
 
-async function getPrismaModels() {
+async function getPrismaModels(): Promise<PrismaModel[]> {
   try {
     const schemaPath = path.join(process.cwd(), 'prisma', 'schema.prisma');
     const schemaContent = fs.readFileSync(schemaPath, 'utf8');
@@ -70,7 +98,9 @@ async function getPrismaModels() {
     if (!modelMatches) return [];
     
     return modelMatches.map(match => {
-      const modelName = match.match(/model\s+(\w+)/)[1];
+      const modelNameMatch = match.match(/model\s+(\w+)/);
+      if (!modelNameMatch) throw new Error(`Could not extract model name from: ${match}`);
+      const modelName = modelNameMatch[1];
       return {
         name: modelName,
         value: modelName,
@@ -84,9 +114,9 @@ async function getPrismaModels() {
   }
 }
 
-async function scanModuleFolder(moduleFolderPath, modelName) {
+async function scanModuleFolder(moduleFolderPath: string, modelName: string): Promise<ExistingFiles> {
   const moduleDir = path.join(moduleFolderPath, modelName.toLowerCase());
-  const existingFiles = {
+  const existingFiles: ExistingFiles = {
     sdl: false,
     queries: [],
     mutations: []
@@ -112,27 +142,35 @@ async function scanModuleFolder(moduleFolderPath, modelName) {
       });
     }
   } catch (error) {
-    console.warn(`Could not scan module folder: ${error.message}`);
+    console.warn(`Could not scan module folder: ${(error as Error).message}`);
   }
 
   return existingFiles;
 }
 
 // Helper to singularize model names (basic, for common cases)
-function singularize(name) {
+function singularize(name: string): string {
   if (name.endsWith('ies')) return name.slice(0, -3) + 'y';
   if (name.endsWith('ses')) return name.slice(0, -2);
   if (name.endsWith('s') && !name.endsWith('ss')) return name.slice(0, -1);
   return name;
 }
 
-async function main() {
+// Convert modelName to kebab-case for folder
+function toKebabCase(str: string): string {
+  return str.replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .replace(/_/g, '-')
+    .toLowerCase();
+}
+
+async function main(): Promise<void> {
   const presets = await loadPresets();
   const presetNames = Object.keys(presets);
   
   // Check if preset name was passed as command line argument
   const presetArg = process.argv[2];
-  let config;
+  let config: GeneratorConfig;
   
   if (presetArg) {
     // Use preset directly without prompts
@@ -191,24 +229,29 @@ async function main() {
     
 
     // Ask for model name first
-    const modelQuestion = models.length > 0 ? {
-      type: 'list',
-      name: 'modelName',
-      message: 'Select Prisma model to generate from:',
-      choices: [
-        ...models,
-        new inquirer.Separator(),
-        { name: '✏️  Type custom model name', value: 'custom' }
-      ]
-    } : {
-      type: 'input',
-      name: 'modelName',
-      message: 'Enter Prisma model name:',
-      validate: (input) => {
-        if (!input.trim()) return 'Model name is required';
-        return true;
-      }
-    };
+    let modelQuestion: any;
+    if (models.length > 0) {
+      modelQuestion = {
+        type: 'list',
+        name: 'modelName',
+        message: 'Select Prisma model to generate from:',
+        choices: [
+          ...models,
+          new inquirer.Separator(),
+          { name: '✏️  Type custom model name', value: 'custom' }
+        ]
+      };
+    } else {
+      modelQuestion = {
+        type: 'input',
+        name: 'modelName',
+        message: 'Enter Prisma model name:',
+        validate: (input: string) => {
+          if (!input.trim()) return 'Model name is required';
+          return true;
+        }
+      };
+    }
 
     let { modelName } = await inquirer.prompt([modelQuestion]);
 
@@ -219,7 +262,7 @@ async function main() {
           type: 'input',
           name: 'customModelName',
           message: 'Enter model name:',
-          validate: (input) => {
+          validate: (input: string) => {
             if (!input.trim()) return 'Model name is required';
             return true;
           }
@@ -229,13 +272,7 @@ async function main() {
     }
 
     // Convert modelName to kebab-case for folder
-    function toKebabCase(str) {
-      return str.replace(/([a-z])([A-Z])/g, '$1-$2')
-        .replace(/\s+/g, '-')
-        .replace(/_/g, '-')
-        .toLowerCase();
-    }
-    const moduleFolderPath = `./src/subgraphs/db/${toKebabCase(modelName)}`;
+    const moduleFolderPath = path.join('.', configData.files.baseModulePath, toKebabCase(modelName));
 
     // Scan existing files
     const existingFiles = await scanModuleFolder(moduleFolderPath, modelName);
@@ -249,76 +286,71 @@ async function main() {
     }
 
     // Ask about operations
-    const { operations } = await inquirer.prompt([
-      {
-        type: 'checkbox',
-        name: 'operations',
-        message: 'What do you want to generate?',
-        choices: [
-          { name: 'SDL (Schema Definition)', value: 'sdl', checked: !existingFiles.sdl },
-          { name: 'Queries', value: 'queries' },
-          { name: 'Mutations', value: 'mutations' }
-        ],
-        validate: (choices) => {
-          if (choices.length === 0) return 'Select at least one option';
-          return true;
-        }
+    const operationsResult = await inquirer.prompt({
+      type: 'checkbox',
+      name: 'operations',
+      message: 'What do you want to generate?',
+      choices: [
+        { name: 'SDL (Schema Definition)', value: 'sdl', checked: !existingFiles.sdl },
+        { name: 'Queries', value: 'queries' },
+        { name: 'Mutations', value: 'mutations' }
+      ],
+      validate: (choices: any) => {
+        if (choices.length === 0) return 'Select at least one option';
+        return true;
       }
-    ]);
+    } as any);
+    const operations = operationsResult.operations as string[];
 
-    let queries = [];
-    let mutations = [];
+    let queries: string[] = [];
+    let mutations: string[] = [];
 
     // Ask for specific queries if selected
     if (operations.includes('queries')) {
       const singularModel = singularize(modelName);
       const pluralModel = modelName.endsWith('s') ? modelName : modelName + 's';
-      const { selectedQueries } = await inquirer.prompt([
-        {
-          type: 'checkbox',
-          name: 'selectedQueries',
-          message: 'Select queries to generate:',
-          choices: [
-            { name: `${singularModel.toLowerCase()} - Find single record`, value: 'findUnique', checked: true },
-            { name: `${pluralModel.toLowerCase()} - Find multiple records`, value: 'findMany', checked: true },
-            { name: `${singularModel.toLowerCase()}Count - Count records`, value: 'count' },
-            { name: `${singularModel.toLowerCase()}Aggregate - Aggregate data`, value: 'aggregate' },
-            { name: `${singularModel.toLowerCase()}GroupBy - Group by fields`, value: 'groupBy' }
-          ],
-          validate: (choices) => {
-            if (choices.length === 0) return 'Select at least one query';
-            return true;
-          }
+      const queriesResult = await inquirer.prompt({
+        type: 'checkbox',
+        name: 'selectedQueries',
+        message: 'Select queries to generate:',
+        choices: [
+          { name: `${singularModel.toLowerCase()} - Find single record`, value: 'findUnique', checked: true },
+          { name: `${pluralModel.toLowerCase()} - Find multiple records`, value: 'findMany', checked: true },
+          { name: `${singularModel.toLowerCase()}Count - Count records`, value: 'count' },
+          { name: `${singularModel.toLowerCase()}Aggregate - Aggregate data`, value: 'aggregate' },
+          { name: `${singularModel.toLowerCase()}GroupBy - Group by fields`, value: 'groupBy' }
+        ],
+        validate: (choices: any) => {
+          if (choices.length === 0) return 'Select at least one query';
+          return true;
         }
-      ]);
-      queries = selectedQueries;
+      } as any);
+      queries = queriesResult.selectedQueries;
     }
 
     // Ask for specific mutations if selected
     if (operations.includes('mutations')) {
       const singularModel = singularize(modelName);
       const pluralModel = modelName.endsWith('s') ? modelName : modelName + 's';
-      const { selectedMutations } = await inquirer.prompt([
-        {
-          type: 'checkbox',
-          name: 'selectedMutations',
-          message: 'Select mutations to generate:',
-          choices: [
-            { name: `create${singularModel} - Create single record`, value: 'create', checked: true },
-            { name: `createMany${pluralModel} - Create multiple records`, value: 'createMany' },
-            { name: `update${singularModel} - Update single record`, value: 'update', checked: true },
-            { name: `updateMany${pluralModel} - Update multiple records`, value: 'updateMany' },
-            { name: `upsert${singularModel} - Create or update record`, value: 'upsert' },
-            { name: `delete${singularModel} - Delete single record`, value: 'delete', checked: true },
-            { name: `deleteMany${pluralModel} - Delete multiple records`, value: 'deleteMany' }
-          ],
-          validate: (choices) => {
-            if (choices.length === 0) return 'Select at least one mutation';
-            return true;
-          }
+      const mutationsResult = await inquirer.prompt({
+        type: 'checkbox',
+        name: 'selectedMutations',
+        message: 'Select mutations to generate:',
+        choices: [
+          { name: `create${singularModel} - Create single record`, value: 'create', checked: true },
+          { name: `createMany${pluralModel} - Create multiple records`, value: 'createMany' },
+          { name: `update${singularModel} - Update single record`, value: 'update', checked: true },
+          { name: `updateMany${pluralModel} - Update multiple records`, value: 'updateMany' },
+          { name: `upsert${singularModel} - Create or update record`, value: 'upsert' },
+          { name: `delete${singularModel} - Delete single record`, value: 'delete', checked: true },
+          { name: `deleteMany${pluralModel} - Delete multiple records`, value: 'deleteMany' }
+        ],
+        validate: (choices: any) => {
+          if (choices.length === 0) return 'Select at least one mutation';
+          return true;
         }
-      ]);
-      mutations = selectedMutations;
+      } as any);
+      mutations = mutationsResult.selectedMutations;
     }
 
     config = {
@@ -342,9 +374,9 @@ async function main() {
         type: 'input',
         name: 'presetName',
         message: 'Preset name:',
-        when: (answers) => answers.saveAsPreset,
+        when: (answers: any) => answers.saveAsPreset,
         default: `${modelName.toLowerCase()}-${operations.join('-')}`,
-        validate: (input) => {
+        validate: (input: string) => {
           if (!input.trim()) return 'Preset name is required';
           if (presets[input]) return 'Preset name already exists';
           return true;
@@ -360,7 +392,7 @@ async function main() {
   } else {
     // Quick mode with defaults
     const models = await getPrismaModels();
-    let modelName;
+    let modelName: string;
 
     if (models.length > 0) {
       const { selectedModel } = await inquirer.prompt([
@@ -378,7 +410,7 @@ async function main() {
           type: 'input',
           name: 'inputModel',
           message: 'Enter model name for quick generate:',
-          validate: (input) => input.trim() ? true : 'Model name is required'
+          validate: (input: string) => input.trim() ? true : 'Model name is required'
         }
       ]);
       modelName = inputModel;
@@ -390,7 +422,11 @@ async function main() {
       operations: ['sdl', 'queries', 'mutations'],
       queries: ['findUnique', 'findMany'],
       mutations: ['create', 'update', 'delete'],
-      existingFiles: {}
+      existingFiles: {
+        sdl: false,
+        queries: [],
+        mutations: []
+      }
     };
   }
 
@@ -398,7 +434,7 @@ async function main() {
   await executeGeneration(config);
 }
 
-async function executeGeneration(config) {
+async function executeGeneration(config: GeneratorConfig): Promise<void> {
   // Execute with environment variables
   const env = {
     ...process.env,
@@ -424,7 +460,7 @@ async function executeGeneration(config) {
     shell: true
   });
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     child.on('exit', (code) => {
       if (code === 0) {
         console.log('\n✅ GraphQL module generation completed successfully!');

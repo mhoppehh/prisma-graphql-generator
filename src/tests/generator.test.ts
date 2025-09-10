@@ -2,7 +2,7 @@ import { onGenerate } from '../generator'
 import { GeneratorOptions } from '@prisma/generator-helper'
 import { writeFileSafely } from '../utils/writeFileSafely'
 import { generateGraphQLFiles } from '../helpers'
-import { config as generatorConfig } from '../config/generator.config'
+import { config as generatorConfig } from '../config/config'
 
 // Mock dependencies
 jest.mock('../utils/writeFileSafely')
