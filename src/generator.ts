@@ -11,32 +11,35 @@ import { GENERATOR_NAME } from './constants'
 import { generateGraphQLFiles } from './helpers'
 import { checkExistingFiles } from './utils/fileExists'
 import { writeFileSafely } from './utils/writeFileSafely'
+import { config as generatorConfig } from './config/generator.config'
 
 const { version } = require('../package.json')
 
 export const onGenerate = async (options: GeneratorOptions) => {
-  // Parse environment variables
-  const modelName = process.env.GENERATOR_MODEL?.trim()
-  const modulePath = process.env.GENERATOR_MODULE_PATH?.trim()
+  const configData = generatorConfig.getConfig()
+  
+  // Parse environment variables using config
+  const modelName = process.env[configData.envVars.model]?.trim()
+  const modulePath = process.env[configData.envVars.modulePath]?.trim()
   const operations =
-    process.env.GENERATOR_OPERATIONS?.split(',')
+    process.env[configData.envVars.operations]?.split(',')
       .map(s => s.trim())
       .filter(Boolean) || []
   const queries =
-    process.env.GENERATOR_QUERIES?.split(',')
+    process.env[configData.envVars.queries]?.split(',')
       .map(s => s.trim())
       .filter(Boolean) || []
   const mutations =
-    process.env.GENERATOR_MUTATIONS?.split(',')
+    process.env[configData.envVars.mutations]?.split(',')
       .map(s => s.trim())
       .filter(Boolean) || []
-  const presetUsed = process.env.GENERATOR_PRESET_USED?.trim()
-  const timestamp = process.env.GENERATOR_TIMESTAMP?.trim()
+  const presetUsed = process.env[configData.envVars.presetUsed]?.trim()
+  const timestamp = process.env[configData.envVars.timestamp]?.trim()
 
   // Parse custom plurals from environment variable
   // Format: "singular1:plural1,singular2:plural2"
   const customPlurals: Record<string, string> = {}
-  const customPluralsEnv = process.env.GENERATOR_CUSTOM_PLURALS?.trim()
+  const customPluralsEnv = process.env[configData.envVars.customPlurals]?.trim()
   if (customPluralsEnv) {
     customPluralsEnv.split(',').forEach(pair => {
       const [singular, plural] = pair.split(':').map(s => s.trim())
@@ -54,16 +57,16 @@ export const onGenerate = async (options: GeneratorOptions) => {
     logger.error('No model-specific GraphQL files will be generated.')
     // Fallback: generate basic schema files - simplified since legacy functions are deprecated
     const basePath = options.generator.output?.value!
-    const fallbackContent = `// GraphQL generator fallback - please use specific model generation`
-    await writeFileSafely(path.join(basePath, 'schema.ts'), fallbackContent)
+    const fallbackContent = configData.content.fallbackMessages.basic
+    await writeFileSafely(path.join(basePath, configData.files.fallbackFiles.schemaTs), fallbackContent)
     await writeFileSafely(
-      path.join(basePath, 'schema.graphql'),
+      path.join(basePath, configData.files.fallbackFiles.schemaGraphql),
       fallbackContent,
     )
-    await writeFileSafely(
-      path.join(basePath, 'options.json'),
-      JSON.stringify(options, null, 2),
-    )
+    // await writeFileSafely(
+    //   path.join(basePath, configData.files.fallbackFiles.optionsJson),
+    //   JSON.stringify(options, null, 2),
+    // )
     return
   }
 
@@ -88,33 +91,34 @@ export const onGenerate = async (options: GeneratorOptions) => {
     logger.info(`✅ Generated GraphQL files for model: ${modelName}`)
     logger.info(`📋 Queries: ${queries.join(', ')}`)
     logger.info(`🔧 Mutations: ${mutations.join(', ')}`)
-    const basePath = options.generator.output?.value!
-    await writeFileSafely(
-      path.join(basePath, 'options.json'),
-      JSON.stringify(options, null, 2),
-    )
+    // const basePath = options.generator.output?.value!
+    // await writeFileSafely(
+    //   path.join(basePath, configData.files.fallbackFiles.optionsJson),
+    //   JSON.stringify(options, null, 2),
+    // )
     return
   }
 
   // Fallback: generate basic schema files
   const basePath = options.generator.output?.value!
-  const fallbackContent = `// GraphQL generator fallback - please use specific model generation with queries or mutations`
-  await writeFileSafely(path.join(basePath, 'schema.ts'), fallbackContent)
-  await writeFileSafely(path.join(basePath, 'schema.graphql'), fallbackContent)
-  await writeFileSafely(
-    path.join(basePath, 'options.json'),
-    JSON.stringify(options, null, 2),
-  )
+  const fallbackContent = configData.content.fallbackMessages.withOperations
+  await writeFileSafely(path.join(basePath, configData.files.fallbackFiles.schemaTs), fallbackContent)
+  await writeFileSafely(path.join(basePath, configData.files.fallbackFiles.schemaGraphql), fallbackContent)
+  // await writeFileSafely(
+  //   path.join(basePath, configData.files.fallbackFiles.optionsJson),
+  //   JSON.stringify(options, null, 2),
+  // )
 }
 
 generatorHandler({
   onManifest(config: GeneratorConfig) {
+    const configData = generatorConfig.getConfig()
     logger.info(`${GENERATOR_NAME}:Registered`)
     logger.info('Config: ' + JSON.stringify(config, null, 2))
     return {
       version,
-      defaultOutput: '../generated',
-      prettyName: GENERATOR_NAME,
+      defaultOutput: configData.generator.defaultOutput,
+      prettyName: configData.generator.prettyName,
     }
   },
   onGenerate: onGenerate,

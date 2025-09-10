@@ -6,26 +6,26 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
 {{#each queries}}
     {{name}}: async (_parent, args, context) => {
       {{#if (eq operationType "findUnique")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.findUnique({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findUnique({
         where: args.where,
       });
       {{else if (eq operationType "findFirst")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.findFirst({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findFirst({
         where: args.where,
       });
       {{else if (eq operationType "findMany")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.findMany({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findMany({
         where: args.where,
         orderBy: args.orderBy,
         take: args.take,
         skip: args.skip,
       });
       {{else if (eq operationType "count")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.count({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.count({
         where: args.where,
       });
       {{else if (eq operationType "aggregate")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.aggregate({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.aggregate({
         where: args.where,
         _count: args._count,
         _avg: args._avg,
@@ -34,7 +34,7 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
         _max: args._max,
       });
       {{else if (eq operationType "groupBy")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.groupBy({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.groupBy({
         by: args.by,
         where: args.where,
         having: args.having,
@@ -43,7 +43,7 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
         skip: args.skip,
       });
       {{else}}
-      throw new Error('{{name}} resolver not implemented');
+      throw new Error('{{../errorMessageTemplate}}'.replace('{operationName}', '{{name}}'));
       {{/if}}
     },
 {{/each}}
@@ -55,40 +55,40 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
 {{#each mutations}}
     {{name}}: async (_parent, args, context) => {
       {{#if (eq operationType "create")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.create({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.create({
         data: args.data,
       });
       {{else if (eq operationType "createMany")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.createMany({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.createMany({
         data: args.data,
         skipDuplicates: args.skipDuplicates,
       });
       {{else if (eq operationType "update")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.update({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.update({
         where: args.where,
         data: args.data,
       });
       {{else if (eq operationType "updateMany")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.updateMany({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.updateMany({
         where: args.where,
         data: args.data,
       });
       {{else if (eq operationType "upsert")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.upsert({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.upsert({
         where: args.where,
         create: args.create,
         update: args.update,
       });
       {{else if (eq operationType "delete")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.delete({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.delete({
         where: args.where,
       });
       {{else if (eq operationType "deleteMany")}}
-      return (await context.dataSources.prisma()).{{../modelNameLower}}.deleteMany({
+      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.deleteMany({
         where: args.where,
       });
       {{else}}
-      throw new Error('{{name}} resolver not implemented');
+      throw new Error('{{../errorMessageTemplate}}'.replace('{operationName}', '{{name}}'));
       {{/if}}
     },
 {{/each}}

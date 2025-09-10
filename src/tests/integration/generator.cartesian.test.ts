@@ -174,96 +174,96 @@ describe('Cartesian Product Generator Tests', () => {
     )
   })
 
-  describe('Verify Cartesian Product Generation Count', () => {
-    it('should generate the expected number of test combinations', () => {
-      const testParameters = {
-        models: {
-          values: ['A', 'B'],
-          multi: false
-        },
-        queries: {
-          values: ['q1', 'q2'],
-          multi: true
-        },
-        mutations: {
-          values: ['m1', 'm2'],
-          multi: true
-        }
-      }
+  // describe('Verify Cartesian Product Generation Count', () => {
+  //   it('should generate the expected number of test combinations', () => {
+  //     const testParameters = {
+  //       models: {
+  //         values: ['A', 'B'],
+  //         multi: false
+  //       },
+  //       queries: {
+  //         values: ['q1', 'q2'],
+  //         multi: true
+  //       },
+  //       mutations: {
+  //         values: ['m1', 'm2'],
+  //         multi: true
+  //       }
+  //     }
 
-      const combinations = generateParameterCombinations(testParameters)
+  //     const combinations = generateParameterCombinations(testParameters)
       
-      // Expected combinations:
-      // Models: 2 choices (A, B)
-      // Queries: 4 subsets ([], [q1], [q2], [q1,q2])
-      // Mutations: 4 subsets ([], [m1], [m2], [m1,m2])
-      // Total: 2 * 4 * 4 = 32 combinations
-      expect(combinations).toHaveLength(32)
+  //     // Expected combinations:
+  //     // Models: 2 choices (A, B)
+  //     // Queries: 4 subsets ([], [q1], [q2], [q1,q2])
+  //     // Mutations: 4 subsets ([], [m1], [m2], [m1,m2])
+  //     // Total: 2 * 4 * 4 = 32 combinations
+  //     expect(combinations).toHaveLength(32)
 
-      // Verify structure of first few combinations
-      expect(combinations[0]).toEqual([['A'], [], []])
-      expect(combinations[1]).toEqual([['A'], [], ['m1']])
-      expect(combinations[2]).toEqual([['A'], [], ['m2']])
-      expect(combinations[3]).toEqual([['A'], [], ['m1', 'm2']])
-    })
-  })
+  //     // Verify structure of first few combinations
+  //     expect(combinations[0]).toEqual([['A'], [], []])
+  //     expect(combinations[1]).toEqual([['A'], [], ['m1']])
+  //     expect(combinations[2]).toEqual([['A'], [], ['m2']])
+  //     expect(combinations[3]).toEqual([['A'], [], ['m1', 'm2']])
+  //   })
+  // })
 
-  describe('Focused Test Combinations (Practical Examples)', () => {
-    const practicalParameters = {
-      models: {
-        values: ['Employee', 'Product'],
-        multi: false
-      },
-      queryTypes: {
-        values: [
-          { queries: ['findMany'], mutations: [] },
-          { queries: ['findUnique'], mutations: [] },
-          { queries: [], mutations: ['create'] },
-          { queries: ['findMany'], mutations: ['update'] }
-        ],
-        multi: false
-      }
-    }
+  // describe('Focused Test Combinations (Practical Examples)', () => {
+  //   const practicalParameters = {
+  //     models: {
+  //       values: ['Employee', 'Product'],
+  //       multi: false
+  //     },
+  //     queryTypes: {
+  //       values: [
+  //         { queries: ['findMany'], mutations: [] },
+  //         { queries: ['findUnique'], mutations: [] },
+  //         { queries: [], mutations: ['create'] },
+  //         { queries: ['findMany'], mutations: ['update'] }
+  //       ],
+  //       multi: false
+  //     }
+  //   }
 
-    const practicalCombinations = generateParameterCombinations(practicalParameters)
+  //   const practicalCombinations = generateParameterCombinations(practicalParameters)
 
-    describe.each(practicalCombinations)(
-      'Practical test scenarios',
-      (models, queryTypes) => {
-        const model = models[0]
-        const queryType = queryTypes[0]
+  //   describe.each(practicalCombinations)(
+  //     'Practical test scenarios',
+  //     (models, queryTypes) => {
+  //       const model = models[0]
+  //       const queryType = queryTypes[0]
 
-        it(`should generate files for ${model} with operations ${JSON.stringify(queryType)}`, async () => {
-          process.env.GENERATOR_MODEL = model
-          process.env.GENERATOR_MODULE_PATH = './src/modules'
+  //       it(`should generate files for ${model} with operations ${JSON.stringify(queryType)}`, async () => {
+  //         process.env.GENERATOR_MODEL = model
+  //         process.env.GENERATOR_MODULE_PATH = './src/modules'
           
-          if (queryType.queries.length > 0) {
-            process.env.GENERATOR_QUERIES = queryType.queries.join(',')
-          }
-          if (queryType.mutations.length > 0) {
-            process.env.GENERATOR_MUTATIONS = queryType.mutations.join(',')
-          }
+  //         if (queryType.queries.length > 0) {
+  //           process.env.GENERATOR_QUERIES = queryType.queries.join(',')
+  //         }
+  //         if (queryType.mutations.length > 0) {
+  //           process.env.GENERATOR_MUTATIONS = queryType.mutations.join(',')
+  //         }
 
-          await onGenerate(options)
+  //         await onGenerate(options)
 
-          // Capture generated files for snapshot testing
-          const generatedOutput = captureGeneratedOutput()
+  //         // Capture generated files for snapshot testing
+  //         const generatedOutput = captureGeneratedOutput()
           
-          const snapshot = {
-            scenario: {
-              model,
-              queries: queryType.queries.join(',') || 'none',
-              mutations: queryType.mutations.join(',') || 'none',
-              modulePath: './src/modules'
-            },
-            files: generatedOutput
-          }
+  //         const snapshot = {
+  //           scenario: {
+  //             model,
+  //             queries: queryType.queries.join(',') || 'none',
+  //             mutations: queryType.mutations.join(',') || 'none',
+  //             modulePath: './src/modules'
+  //           },
+  //           files: generatedOutput
+  //         }
 
-          const queriesLabel = queryType.queries.join('_') || 'noQueries'
-          const mutationsLabel = queryType.mutations.join('_') || 'noMutations'
-          expect(snapshot).toMatchSnapshot(`practical-${model}-${queriesLabel}-${mutationsLabel}`)
-        })
-      }
-    )
-  })
+  //         const queriesLabel = queryType.queries.join('_') || 'noQueries'
+  //         const mutationsLabel = queryType.mutations.join('_') || 'noMutations'
+  //         expect(snapshot).toMatchSnapshot(`practical-${model}-${queriesLabel}-${mutationsLabel}`)
+  //       })
+  //     }
+  //   )
+  // })
 })

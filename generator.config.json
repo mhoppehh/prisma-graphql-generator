@@ -1,0 +1,23 @@
+{
+  "generator": {
+    "prettyName": "My Custom GraphQL Generator",
+    "defaultOutput": "./generated"
+  },
+  "files": {
+    "extensions": {
+      "graphql": ".graphql",
+      "resolver": ".resolvers.ts"
+    },
+    "templates": {
+      "graphqlTemplate": "custom-templates/schema.hbs",
+      "resolverTemplate": "custom-templates/resolvers.hbs"
+    },
+    "baseGraphqlPath": "src/schema/base.graphql"
+  },
+  "content": {
+    "resolverImplementation": {
+      "dataSourceMethod": "context.prisma",
+      "errorMessageTemplate": "Operation {operationName} is not implemented yet"
+    }
+  }
+}

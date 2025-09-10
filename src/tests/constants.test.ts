@@ -1,7 +1,7 @@
-import { GENERATOR_NAME } from '../constants';
+import { GENERATOR_NAME } from '../constants'
 
-describe('constants', () => {
-  it('exports the correct generator name', () => {
+describe('GENERATOR_NAME', () => {
+  it('should be defined', () => {
     expect(GENERATOR_NAME).toBe('prisma-generator-graphql-test');
   });
 });

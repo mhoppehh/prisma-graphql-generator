@@ -91,6 +91,8 @@ export interface HandlebarsTemplateData {
   hasOutputTypes: boolean
   camelCase: (str: string) => string
   pascalCase: (str: string) => string
+  dataSourceMethod?: string
+  errorMessageTemplate?: string
 }
 
 // --- GraphQL AST Types ---
@@ -110,6 +112,7 @@ export interface ItemType {
 export type OperationType =
   | 'findUnique'
   | 'findMany'
+  | 'findFirst'
   | 'count'
   | 'aggregate'
   | 'groupBy'
@@ -126,6 +129,7 @@ export const mapOperationToPrismaFunc = (operation: string): string => {
   const operationMap: Record<string, string> = {
     findUnique: 'findUnique',
     findMany: 'findMany',
+    findFirst: 'findFirst',
     count: 'count',
     aggregate: 'aggregate',
     groupBy: 'groupBy',

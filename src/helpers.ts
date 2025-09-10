@@ -18,6 +18,7 @@ import {
   mapOperationToPrismaFunc,
   GraphQLTypes,
 } from './types/newTypes'
+import { config as generatorConfig } from './config/generator.config'
 import { fileExists } from './utils/fileExists'
 import { formatFile } from './utils/formatFile'
 import {
@@ -116,18 +117,8 @@ const prepareFieldsData = (model: DMMF.Model): GraphQLField[] => {
 
 // --- Input/Output Type Processing ---
 const mapPrismaTypeToGraphQL = (type: string): string => {
-  const typeMap: Record<string, string> = {
-    Int: 'Int',
-    String: 'String',
-    Boolean: 'Boolean',
-    Float: 'Float',
-    DateTime: 'DateTime',
-    Json: 'JSON',
-    Decimal: 'Float',
-    BigInt: 'BigInt',
-    Bytes: 'Bytes',
-  }
-  return typeMap[type] || type
+  const configData = generatorConfig.getConfig()
+  return configData.typeMappings.prismaToGraphQL[type] || type
 }
 
 // Helper function to add enum types to base.graphql
@@ -135,10 +126,11 @@ const addEnumToBase = async (
   enumName: string,
   dmmf: DMMF.Document,
 ): Promise<void> => {
+  const configData = generatorConfig.getConfig()
   // Path relative to the project root
   const baseGraphQLPath = path.resolve(
     process.cwd(),
-    'src/subgraphs/base.graphql',
+    configData.files.baseGraphqlPath,
   )
 
   try {
@@ -436,8 +428,9 @@ export async function generateGraphqlModule(
   options: GenerateModuleOptions,
 ): Promise<void> {
   const { model, modulePath } = options
-  const sdlPath = path.join(modulePath, `${model.name}.graphql`)
-  const resolverPath = path.join(modulePath, `${model.name}.resolver.ts`)
+  const configData = generatorConfig.getConfig()
+  const sdlPath = path.join(modulePath, `${model.name}${configData.files.extensions.graphql}`)
+  const resolverPath = path.join(modulePath, `${model.name}${configData.files.extensions.resolver}`)
 
   const sdlExists = await fileExists(sdlPath)
   const resolverExists = await fileExists(resolverPath)
@@ -447,7 +440,7 @@ export async function generateGraphqlModule(
   } else {
     await compileTemplateFile(
       sdlPath,
-      'templates/handlebars/module.graphql.hbs',
+      configData.files.templates.graphqlTemplate,
       options,
     )
   }
@@ -457,7 +450,7 @@ export async function generateGraphqlModule(
   } else {
     await compileTemplateFile(
       resolverPath,
-      'templates/handlebars/module.resolver.ts.hbs',
+      configData.files.templates.resolverTemplate,
       options,
     )
   }
@@ -469,6 +462,7 @@ async function compileTemplateFile(
   options: GenerateModuleOptions,
 ): Promise<void> {
   const { model, queries, mutations } = options
+  const configData = generatorConfig.getConfig()
 
   const modelNameLower =
     model.name.charAt(0).toLowerCase() + model.name.slice(1)
@@ -522,6 +516,8 @@ async function compileTemplateFile(
     hasOutputTypes: types.output.length > 0,
     camelCase: (str: string) => str.charAt(0).toLowerCase() + str.slice(1),
     pascalCase: (str: string) => str.charAt(0).toUpperCase() + str.slice(1),
+    dataSourceMethod: configData.content.resolverImplementation.dataSourceMethod,
+    errorMessageTemplate: configData.content.resolverImplementation.errorMessageTemplate,
   }
 
   const templatePath = path.join(__dirname, templateFilePath)

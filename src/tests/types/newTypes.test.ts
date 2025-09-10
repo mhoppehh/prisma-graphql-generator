@@ -5,6 +5,7 @@ describe('newTypes', () => {
     it('maps standard query operations correctly', () => {
       expect(mapOperationToPrismaFunc('findUnique')).toBe('findUnique');
       expect(mapOperationToPrismaFunc('findMany')).toBe('findMany');
+      expect(mapOperationToPrismaFunc('findFirst')).toBe('findFirst');
       expect(mapOperationToPrismaFunc('count')).toBe('count');
       expect(mapOperationToPrismaFunc('aggregate')).toBe('aggregate');
       expect(mapOperationToPrismaFunc('groupBy')).toBe('groupBy');
