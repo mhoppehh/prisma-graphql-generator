@@ -1,149 +1,72 @@
 import { logger } from '@prisma/internals'
 import { pluginManager } from './manager'
-import { Plugin, PluginConfig } from './types'
-import { loggingPlugin, validationPlugin, fieldTransformPlugin } from './builtin'
+import { Plugin } from './types'
+import path from 'path'
 
-/**
- * Plugin loader configuration
- */
-export interface PluginLoaderConfig {
-  // Built-in plugins to auto-register
-  builtinPlugins?: {
-    logging?: boolean | PluginConfig
-    validation?: boolean | PluginConfig
-    fieldTransform?: boolean | PluginConfig
-  }
-  
-  // Custom plugins to register
-  customPlugins?: Array<{
-    plugin: Plugin
-    config?: PluginConfig
-  }>
-  
-  // Plugin discovery settings
-  discovery?: {
-    // Scan for plugins in specific directories
-    directories?: string[]
-    // Plugin file patterns to look for
-    patterns?: string[]
-  }
+export interface PluginConfig {
+  name: string
+  config: PluginOptions
 }
 
-/**
- * Plugin loader utility
- */
+export interface PluginOptions {
+  enabled: boolean
+  options?: Record<string, any>
+}
+
 export class PluginLoader {
-  private config: PluginLoaderConfig
+  private plugins: Array<PluginConfig>
 
-  constructor(config: PluginLoaderConfig = {}) {
-    this.config = config
+  constructor(plugins: Array<PluginConfig>) {
+    this.plugins = plugins
+
+    this.loadPlugins()
   }
 
-  /**
-   * Load and register all configured plugins
-   */
-  async loadPlugins(): Promise<void> {
-    logger.info('🔌 Loading plugins...')
-
-    // Load built-in plugins
-    await this.loadBuiltinPlugins()
-
-    // Load custom plugins
-    await this.loadCustomPlugins()
-
-    // Auto-discover plugins (if configured)
-    await this.discoverPlugins()
-
-    const registeredPlugins = pluginManager.getRegisteredPlugins()
-    logger.info(`🔌 Loaded ${registeredPlugins.length} plugin(s)`)
-  }
-
-  /**
-   * Load built-in plugins based on configuration
-   */
-  private async loadBuiltinPlugins(): Promise<void> {
-    const builtinConfig = this.config.builtinPlugins || {}
-
-    // Logging plugin
-    if (builtinConfig.logging !== false) {
-      const config = typeof builtinConfig.logging === 'object' 
-        ? builtinConfig.logging 
-        : { enabled: true }
-      
-      pluginManager.register(loggingPlugin, config)
-    }
-
-    // Validation plugin
-    if (builtinConfig.validation !== false) {
-      const config = typeof builtinConfig.validation === 'object' 
-        ? builtinConfig.validation 
-        : { enabled: true }
-      
-      pluginManager.register(validationPlugin, config)
-    }
-
-    // Field transform plugin
-    if (builtinConfig.fieldTransform) {
-      const config = typeof builtinConfig.fieldTransform === 'object' 
-        ? builtinConfig.fieldTransform 
-        : { enabled: true }
-      
-      pluginManager.register(fieldTransformPlugin, config)
-    }
-  }
-
-  /**
-   * Load custom plugins from configuration
-   */
-  private async loadCustomPlugins(): Promise<void> {
-    const customPlugins = this.config.customPlugins || []
-
-    for (const { plugin, config } of customPlugins) {
+  private async loadPlugins(): Promise<void> {
+    for (const plugin of this.plugins) {
       try {
-        pluginManager.register(plugin, config || { enabled: true })
+        // If plugin is just a name/path reference, we need to load it
+        let actualPlugin: Plugin
+        if (typeof plugin === 'string' || 'name' in plugin) {
+          // Load plugin from path or name
+          actualPlugin = await this.loadPluginFromPath(plugin)
+        } else {
+          actualPlugin = plugin
+        }
+
+        pluginManager.register(actualPlugin, plugin)
       } catch (error) {
-        logger.error(`Failed to load custom plugin '${plugin.name}':`, error)
+        logger.error(`Failed to load custom plugin '${(plugin as any).name || plugin}':`, error)
       }
     }
   }
 
-  /**
-   * Auto-discover plugins in specified directories
-   */
-  private async discoverPlugins(): Promise<void> {
-    const discovery = this.config.discovery
-    if (!discovery?.directories?.length) return
+  private async loadPluginFromPath(pluginRef: string | PluginConfig): Promise<Plugin> {
+    const name = typeof pluginRef === 'string' ? pluginRef : pluginRef.name
+    const pluginPath = path.join(__dirname, 'builtin/', name + '.ts')
 
-    logger.info('🔍 Auto-discovering plugins...')
+    try {
+      const pluginModule = await import(pluginPath)
 
-    // Plugin discovery would be implemented here
-    // This would scan directories for plugin files and load them
-    // For now, this is a placeholder for future implementation
+      const plugin = pluginModule.default || pluginModule[name] || pluginModule
+
+      if (!plugin || !plugin.name) {
+        throw new Error(`Invalid plugin format: ${pluginPath}`)
+      }
+
+      return plugin
+    } catch (error) {
+      throw new Error(`Failed to load plugin from '${pluginPath}': ${error}`)
+    }
   }
 }
 
-/**
- * Default plugin loader instance
- */
-export const defaultPluginLoader = new PluginLoader({
-  builtinPlugins: {
-    logging: true,
-    validation: true,
-    fieldTransform: false // Disabled by default as it requires configuration
+export let pluginLoader = new PluginLoader([])
+
+export async function loadPlugins(config: { plugins?: Array<PluginConfig> }): Promise<void> {
+  if (config.plugins && config.plugins.length > 0) {
+    pluginLoader = new PluginLoader(config.plugins)
+
+    await new Promise(resolve => setTimeout(resolve, 100))
   }
-})
-
-/**
- * Convenience function to load default plugins
- */
-export async function loadDefaultPlugins(): Promise<void> {
-  await defaultPluginLoader.loadPlugins()
-}
-
-/**
- * Convenience function to load plugins with custom configuration
- */
-export async function loadPlugins(config: PluginLoaderConfig): Promise<void> {
-  const loader = new PluginLoader(config)
-  await loader.loadPlugins()
 }

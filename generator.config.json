@@ -52,5 +52,15 @@
       "BigInt": "BigInt",
       "Bytes": "Bytes"
     }
-  }
+  },
+  "plugins": [
+    {
+      "name": "logging",
+      "config": {}
+    },
+    {
+      "name": "formatting",
+      "config": {}
+    }
+  ]
 }

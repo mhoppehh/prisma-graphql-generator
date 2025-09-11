@@ -1,14 +1,14 @@
 import { logger } from '@prisma/internals'
 import {
   Plugin,
-  PluginConfig,
   PluginManager,
   PluginRegistry,
   HookName,
-  HookContext,
-  HookResult,
-  HookFunction
+  HookPayloads,
+  HookFunction,
 } from './types'
+import { PluginConfig } from './loader'
+import { omit } from 'lodash'
 
 /**
  * Default plugin manager implementation
@@ -19,17 +19,15 @@ export class DefaultPluginManager implements PluginManager {
   /**
    * Register a plugin with optional configuration
    */
-  register(plugin: Plugin, config: PluginConfig = { enabled: true }): void {
+  register(plugin: Plugin, config: PluginConfig): void {
     if (this.plugins[plugin.name]) {
       logger.warn(`Plugin '${plugin.name}' is already registered. Overwriting...`)
     }
 
     this.plugins[plugin.name] = {
       plugin,
-      config
+      config,
     }
-
-    logger.info(`Plugin '${plugin.name}' registered successfully`)
   }
 
   /**
@@ -42,7 +40,6 @@ export class DefaultPluginManager implements PluginManager {
     }
 
     delete this.plugins[name]
-    logger.info(`Plugin '${name}' unregistered successfully`)
   }
 
   /**
@@ -62,116 +59,70 @@ export class DefaultPluginManager implements PluginManager {
   /**
    * Execute a specific hook with all registered plugins
    */
-  async executeHook(hookName: HookName, context: HookContext): Promise<HookContext> {
-    let modifiedContext = { ...context }
-
-    // Get all enabled plugins that have handlers for this hook
+  executeHook<T extends HookName>(hookName: T, payload: HookPayloads[T]): HookPayloads[T] {
     const pluginsWithHook = Object.values(this.plugins)
-      .filter(({ config }) => config.enabled)
-      .filter(({ plugin }) => plugin.hooks?.[hookName])
+      .filter(({ config }) => config.config?.enabled !== false)
+      .filter(({ plugin }) => plugin?.hooks?.[hookName])
 
     if (pluginsWithHook.length === 0) {
-      return modifiedContext
+      return payload
     }
-
-    logger.info(`Executing hook '${hookName}' for ${pluginsWithHook.length} plugin(s)`)
 
     for (const { plugin } of pluginsWithHook) {
       try {
-        const hookHandlers = plugin.hooks![hookName]
-        const handlers = Array.isArray(hookHandlers) ? hookHandlers : [hookHandlers!]
+        const hookHandler = plugin.hooks![hookName]
+        if (hookHandler) {
+          const result = this.executeHookFunction<T>(hookHandler as any, payload, plugin.name)
 
-        for (const handler of handlers) {
-          const result = await this.executeHookFunction(handler, modifiedContext, plugin.name)
-          if (result) {
-            modifiedContext = this.mergeHookResult(modifiedContext, result)
-            
-            // If a plugin wants to stop the process
-            if (result.continue === false) {
-              logger.info(`Plugin '${plugin.name}' requested to stop generation process`)
-              break
-            }
-          }
+          return omit(result, ['_metadata']) as HookPayloads[T]
         }
       } catch (error) {
         logger.error(`Error executing hook '${hookName}' in plugin '${plugin.name}':`, error)
-        
+
         // Execute error hook if this isn't already an error hook
         if (hookName !== 'onError') {
-          await this.executeHook('onError', {
-            ...modifiedContext,
-            stage: 'onError',
-            error: error instanceof Error ? error : new Error(String(error))
+          this.executeHook('onError', {
+            ...payload,
+            error: error instanceof Error ? error : new Error(String(error)),
           })
         }
       }
     }
 
-    return modifiedContext
+    return payload
   }
 
   /**
    * Execute a single hook function with proper error handling
    */
-  private async executeHookFunction(
+  private executeHookFunction<T extends HookName>(
     handler: HookFunction,
-    context: HookContext,
-    pluginName: string
-  ): Promise<HookResult | void> {
+    payload: HookPayloads[T],
+    pluginName: string,
+  ): HookPayloads[T] {
     try {
-      return await handler(context)
+      let result = handler(payload)
+      result = omit(result, ['_metadata']) as HookPayloads[T]
+      return result
     } catch (error) {
       logger.error(`Hook function in plugin '${pluginName}' threw an error:`, error)
       throw error
     }
   }
 
-  /**
-   * Merge hook result into context
-   */
-  private mergeHookResult(context: HookContext, result: HookResult): HookContext {
-    const mergedContext = { ...context }
-
-    // Merge all modifiable properties
-    if (result.config) mergedContext.config = result.config
-    if (result.model) mergedContext.model = result.model
-    if (result.moduleOptions) mergedContext.moduleOptions = result.moduleOptions
-    if (result.templateData) mergedContext.templateData = result.templateData
-    if (result.graphqlTypes) mergedContext.graphqlTypes = result.graphqlTypes
-    if (result.generatedContent) mergedContext.generatedContent = result.generatedContent
-
-    // Merge metadata
-    if (result.metadata) {
-      mergedContext.metadata = {
-        ...mergedContext.metadata,
-        ...result.metadata
-      }
-    }
-
-    return mergedContext
-  }
-
-  /**
-   * Get all registered plugins
-   */
   getRegisteredPlugins(): Array<{ plugin: Plugin; config: PluginConfig }> {
     return Object.values(this.plugins)
   }
 
-  /**
-   * Initialize all registered plugins
-   */
   async initializeAll(): Promise<void> {
-    const enabledPlugins = Object.values(this.plugins)
-      .filter(({ config }) => config.enabled)
-
-    logger.info(`Initializing ${enabledPlugins.length} plugin(s)`)
+    const enabledPlugins = Object.values(this.plugins).filter(
+      ({ config }) => config?.config?.enabled !== false,
+    )
 
     for (const { plugin } of enabledPlugins) {
       try {
         if (plugin.initialize) {
           await plugin.initialize(this)
-          logger.info(`Plugin '${plugin.name}' initialized successfully`)
         }
       } catch (error) {
         logger.error(`Failed to initialize plugin '${plugin.name}':`, error)
@@ -183,16 +134,14 @@ export class DefaultPluginManager implements PluginManager {
    * Cleanup all registered plugins
    */
   async cleanupAll(): Promise<void> {
-    const enabledPlugins = Object.values(this.plugins)
-      .filter(({ config }) => config.enabled)
-
-    logger.info(`Cleaning up ${enabledPlugins.length} plugin(s)`)
+    const enabledPlugins = Object.values(this.plugins).filter(
+      ({ config }) => config?.config?.enabled !== false,
+    )
 
     for (const { plugin } of enabledPlugins) {
       try {
         if (plugin.cleanup) {
           await plugin.cleanup()
-          logger.info(`Plugin '${plugin.name}' cleaned up successfully`)
         }
       } catch (error) {
         logger.error(`Failed to cleanup plugin '${plugin.name}':`, error)
@@ -201,21 +150,15 @@ export class DefaultPluginManager implements PluginManager {
   }
 }
 
-/**
- * Global plugin manager instance
- */
 export const pluginManager = new DefaultPluginManager()
 
-/**
- * Convenience function to register a plugin
- */
-export function registerPlugin(plugin: Plugin, config?: PluginConfig): void {
+export function registerPlugin(plugin: Plugin, config: PluginConfig): void {
   pluginManager.register(plugin, config)
 }
 
-/**
- * Convenience function to execute a hook
- */
-export async function executeHook(hookName: HookName, context: HookContext): Promise<HookContext> {
-  return pluginManager.executeHook(hookName, context)
+export function executeHook<T extends HookName>(
+  hookName: T,
+  context: HookPayloads[T],
+): HookPayloads[T] {
+  return pluginManager.executeHook<T>(hookName, context)
 }

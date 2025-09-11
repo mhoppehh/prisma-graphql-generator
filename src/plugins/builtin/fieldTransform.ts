@@ -1,4 +1,6 @@
-import { Plugin, HookContext, HookResult } from '../types'
+import { 
+  Plugin,
+} from '../types'
 
 /**
  * Configuration for the field transformation plugin
@@ -25,70 +27,7 @@ export const fieldTransformPlugin: Plugin = {
   description: 'Transforms model fields during generation with custom naming, types, and directives',
 
   hooks: {
-    onTemplateDataPrepared: (context: HookContext): HookResult | void => {
-      if (!context.templateData) return
-
-      // Get plugin config from metadata (would be set during plugin registration)
-      const config = context.metadata?.fieldTransformConfig as FieldTransformConfig | undefined
-      if (!config) return
-
-      // Transform fields
-      const transformedFields = context.templateData.fields.map(field => {
-        // Skip excluded fields
-        if (config.excludeFields?.includes(field.name)) {
-          return null
-        }
-
-        let transformedField = { ...field }
-
-        // Transform field name
-        if (config.fieldNameTransforms?.[field.name]) {
-          transformedField.name = config.fieldNameTransforms[field.name]
-        }
-
-        // Transform field type
-        if (config.typeTransforms?.[field.type]) {
-          transformedField.type = config.typeTransforms[field.type]
-        }
-
-        // Add custom directives
-        if (config.fieldDirectives?.[field.name]) {
-          transformedField.directives = [
-            ...(transformedField.directives || []),
-            ...config.fieldDirectives[field.name]
-          ]
-        }
-
-        return transformedField
-      }).filter(Boolean) // Remove null fields (excluded ones)
-
-      return {
-        templateData: {
-          ...context.templateData,
-          fields: transformedFields as any[]
-        }
-      }
-    },
-
-    onSDLGenerated: (context: HookContext): HookResult | void => {
-      if (!context.generatedContent) return
-
-      // Get plugin config from metadata
-      const config = context.metadata?.fieldTransformConfig as FieldTransformConfig | undefined
-      if (!config?.fieldDescriptions) return
-
-      let modifiedContent = context.generatedContent
-
-      // Add field descriptions as comments
-      Object.entries(config.fieldDescriptions).forEach(([fieldName, description]) => {
-        const fieldPattern = new RegExp(`(\\s+)(${fieldName}):`, 'g')
-        modifiedContent = modifiedContent.replace(fieldPattern, `$1# ${description}\n$1$2:`)
-      })
-
-      return {
-        generatedContent: modifiedContent
-      }
-    }
+    
   }
 }
 

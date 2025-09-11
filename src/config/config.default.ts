@@ -4,26 +4,26 @@ import { GeneratorConfig } from './config'
 const config: GeneratorConfig = {
   generator: {
     prettyName: 'Prisma GraphQL Generator',
-    defaultOutput: '../generated'
+    defaultOutput: '../generated',
   },
 
   files: {
     extensions: {
       graphql: '.graphql',
-      resolver: '.resolver.ts'
+      resolver: '.resolver.ts',
     },
     templates: {
       graphqlTemplate: 'templates/handlebars/module.graphql.hbs',
-      resolverTemplate: 'templates/handlebars/module.resolver.ts.hbs'
+      resolverTemplate: 'templates/handlebars/module.resolver.ts.hbs',
     },
     fallbackFiles: {
       schemaTs: 'schema.ts',
       schemaGraphql: 'schema.graphql',
-      optionsJson: 'options.json'
+      optionsJson: 'options.json',
     },
     baseGraphqlPath: 'src/subgraphs/base.graphql',
     baseModulePath: 'src/subgraphs/',
-    presetsFilePath: 'prisma/presets.json'
+    presetsFilePath: 'prisma/presets.json',
   },
 
   envVars: {
@@ -34,18 +34,19 @@ const config: GeneratorConfig = {
     mutations: 'GENERATOR_MUTATIONS',
     presetUsed: 'GENERATOR_PRESET_USED',
     timestamp: 'GENERATOR_TIMESTAMP',
-    customPlurals: 'GENERATOR_CUSTOM_PLURALS'
+    customPlurals: 'GENERATOR_CUSTOM_PLURALS',
   },
 
   content: {
     fallbackMessages: {
       basic: '// GraphQL generator fallback - please use specific model generation',
-      withOperations: '// GraphQL generator fallback - please use specific model generation with queries or mutations'
+      withOperations:
+        '// GraphQL generator fallback - please use specific model generation with queries or mutations',
     },
     resolverImplementation: {
       dataSourceMethod: 'context.dataSources.prisma()',
-      errorMessageTemplate: '{operationName} resolver not implemented'
-    }
+      errorMessageTemplate: '{operationName} resolver not implemented',
+    },
   },
 
   typeMappings: {
@@ -58,9 +59,10 @@ const config: GeneratorConfig = {
       Json: 'JSON',
       Decimal: 'Float',
       BigInt: 'BigInt',
-      Bytes: 'Bytes'
-    }
-  }
+      Bytes: 'Bytes',
+    },
+  },
+  plugins: [],
 }
 
 export default config

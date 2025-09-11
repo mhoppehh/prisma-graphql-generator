@@ -44,7 +44,13 @@ describe('helpers with configuration', () => {
       const handlebars = require('handlebars')
       handlebars.compile = jest.fn().mockReturnValue(() => 'compiled content')
 
-      await generateGraphqlModule(mockOptions)
+      await generateGraphqlModule(mockOptions, {
+        modelName: mockOptions.model.name,
+        modulePath: mockOptions.modulePath,
+        operations: [...mockOptions.queries, ...mockOptions.mutations],
+        queries: mockOptions.queries,
+        mutations: mockOptions.mutations
+      })
 
       // Check that files are checked with configurable extensions
       const expectedSdlPath = `src/modules/Employee${configData.files.extensions.graphql}`
@@ -65,7 +71,13 @@ describe('helpers with configuration', () => {
       const handlebars = require('handlebars')
       handlebars.compile = jest.fn().mockReturnValue(() => 'compiled content')
 
-      await generateGraphqlModule(mockOptions)
+      await generateGraphqlModule(mockOptions, {
+        modelName: mockOptions.model.name,
+        modulePath: mockOptions.modulePath,
+        operations: [...mockOptions.queries, ...mockOptions.mutations],
+        queries: mockOptions.queries,
+        mutations: mockOptions.mutations
+      })
 
       // Check that configurable template paths are used
       expect(fs.readFile).toHaveBeenCalledWith(
@@ -101,7 +113,13 @@ describe('helpers with configuration', () => {
       const handlebars = require('handlebars')
       handlebars.compile = jest.fn().mockReturnValue(() => 'compiled content')
 
-      await generateGraphqlModule(mockOptions)
+      await generateGraphqlModule(mockOptions, {
+        modelName: mockOptions.model.name,
+        modulePath: mockOptions.modulePath,
+        operations: [...mockOptions.queries, ...mockOptions.mutations],
+        queries: mockOptions.queries,
+        mutations: mockOptions.mutations
+      })
 
       const configData = generatorConfig.getConfig()
 

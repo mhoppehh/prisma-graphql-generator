@@ -1,145 +1,111 @@
 import { DMMF } from '@prisma/generator-helper'
-import { GeneratorOptions } from '@prisma/generator-helper'
-import { 
-  GenerateModuleOptions, 
-  GeneratorConfig, 
-  HandlebarsTemplateData,
-  GraphQLTypes 
+import {
+  GenerateModuleOptions,
+  GeneratorConfig,
+  Operation,
+  GraphQLInputField,
+  GraphQLInputType,
 } from '../types/newTypes'
+import { PluginConfig } from './loader'
 
-/**
- * Hook names for different stages of the generation process
- */
-export type HookName = 
-  | 'onGenerateStart'           // Start of generation process
-  | 'onConfigParsed'            // After environment variables are parsed
-  | 'onModelFound'              // After model is found in DMMF
-  | 'onOptionsCreated'          // After GenerateModuleOptions is created
-  | 'onTemplateDataPrepared'    // After template data is prepared
-  | 'onTypesGenerated'          // After GraphQL types are generated
-  | 'onSDLGenerated'            // After SDL content is generated
-  | 'onResolverGenerated'       // After resolver content is generated
-  | 'onFileWritten'             // After a file is written
-  | 'onGenerateComplete'        // End of generation process
-  | 'onError'                   // When an error occurs
-
-/**
- * Context object passed to hooks containing all relevant data for the current stage
- */
-export interface HookContext {
-  // Always available
-  stage: HookName
-  timestamp: Date
-  
-  // Available from onGenerateStart
-  generatorOptions?: GeneratorOptions
-  
-  // Available from onConfigParsed
-  config?: GeneratorConfig
-  
-  // Available from onModelFound
-  dmmf?: DMMF.Document
-  model?: DMMF.Model
-  
-  // Available from onOptionsCreated
-  moduleOptions?: GenerateModuleOptions
-  
-  // Available from onTemplateDataPrepared
-  templateData?: HandlebarsTemplateData
-  
-  // Available from onTypesGenerated
-  graphqlTypes?: GraphQLTypes
-  
-  // Available from onSDLGenerated and onResolverGenerated
-  generatedContent?: string
-  filePath?: string
-  
-  // Available from onError
-  error?: Error
-  
-  // Metadata that can be shared between hooks
-  metadata?: Record<string, any>
+export interface HookPayloads {
+  onModuleNotFound: OnModuleNotFoundPayload
+  onError: OnErrorPayload
+  onGenerationFinished: OnGenerationFinishedPayload
+  onFileWrite: OnFileWritePayload
+  onUpdateFile: OnUpdateFilePayload
+  onCompileTemplate: OnCompileTemplatePayload
+  onPreparedOperation: OnPreparedOperationPayload
+  onPreparedTypeField: OnPreparedTypeFieldPayload
+  onPreparedType: OnPreparedTypePayload
 }
 
-/**
- * Result object that hooks can return to modify the generation process
- */
-export interface HookResult {
-  // Whether to continue with the generation process
-  continue?: boolean
-  
-  // Modified data to use for the next stage
-  config?: GeneratorConfig
-  model?: DMMF.Model
-  moduleOptions?: GenerateModuleOptions
-  templateData?: HandlebarsTemplateData
-  graphqlTypes?: GraphQLTypes
-  generatedContent?: string
-  
-  // Additional metadata to add to context
-  metadata?: Record<string, any>
-  
-  // Skip certain operations
-  skipSDLGeneration?: boolean
-  skipResolverGeneration?: boolean
-  skipFileWrite?: boolean
+export type HookName = keyof HookPayloads
+
+export type HookFunction = <T extends HookName>(context: HookPayloads[T]) => HookPayloads[T]
+
+export interface HookPayload {
+  timestamp?: Date
 }
 
-/**
- * Hook function signature
- */
-export type HookFunction = (context: HookContext) => Promise<HookResult | void> | HookResult | void
+export interface OnModuleNotFoundPayload extends HookPayload {
+  modulePath?: string
+  modelName?: string
+}
 
-/**
- * Plugin interface
- */
+export interface OnErrorPayload extends HookPayload {
+  error: Error
+}
+
+export interface OnGenerationFinishedPayload extends HookPayload {
+  modelName?: string
+  modulePath?: string
+  queries?: string[]
+  mutations?: string[]
+  customPlurals?: Record<string, string>
+}
+
+export interface OnFileWritePayload extends HookPayload {
+  writeLocation: string
+  content: any
+}
+
+export interface OnUpdateFilePayload extends HookPayload {
+  sdlPath: string
+  options: GenerateModuleOptions
+  config: GeneratorConfig
+}
+
+export interface OnCompileTemplatePayload extends HookPayload {
+  resolverPath: string
+  template: string
+  options: GenerateModuleOptions
+  config: GeneratorConfig
+}
+
+export interface OnPreparedOperationPayload extends HookPayload, Operation {
+  _metadata: {
+    operationFieldType: DMMF.SchemaField
+  }
+}
+
+export interface OnPreparedTypeFieldPayload extends HookPayload, GraphQLInputField {
+  _metadata?: {
+    typeCategory?: string
+  }
+}
+
+export interface OnPreparedTypePayload extends HookPayload, GraphQLInputType {
+  _metadata: {
+    typeCategory: string
+  }
+}
+
 export interface Plugin {
   name: string
   version?: string
   description?: string
-  
-  // Lifecycle hooks
-  hooks?: Partial<Record<HookName, HookFunction | HookFunction[]>>
-  
-  // Plugin initialization
+  hooks?: Partial<{
+    [K in HookName]: (context: HookPayloads[K]) => HookPayloads[K]
+  }>
   initialize?: (pluginManager: PluginManager) => Promise<void> | void
-  
-  // Plugin cleanup
   cleanup?: () => Promise<void> | void
 }
 
-/**
- * Plugin configuration
- */
-export interface PluginConfig {
-  enabled: boolean
-  options?: Record<string, any>
-}
-
-/**
- * Plugin manager interface
- */
 export interface PluginManager {
-  // Plugin management
   register(plugin: Plugin, config?: PluginConfig): void
   unregister(name: string): void
   isRegistered(name: string): boolean
   getPlugin(name: string): Plugin | undefined
-  
-  // Hook execution
-  executeHook(hookName: HookName, context: HookContext): Promise<HookContext>
-  
-  // Plugin listing
+
+  executeHook<T extends HookName>(hookName: T, context: HookPayloads[T]): HookPayloads[T]
+
   getRegisteredPlugins(): Array<{ plugin: Plugin; config: PluginConfig }>
-  
-  // Lifecycle
+
   initializeAll(): Promise<void>
   cleanupAll(): Promise<void>
 }
 
-/**
- * Plugin registry type for storing plugins
- */
 export interface PluginRegistry {
   [pluginName: string]: {
     plugin: Plugin

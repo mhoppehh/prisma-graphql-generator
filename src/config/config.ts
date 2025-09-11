@@ -3,18 +3,13 @@ import { existsSync, readFileSync } from 'fs'
 import path from 'path'
 
 import defaultConfig from './config.default'
+import { PluginConfig } from '../plugins'
 
-/**
- * Configuration interface for the Prisma GraphQL Generator
- */
 export interface GeneratorConfig {
-  // Generator identity
   generator: {
     prettyName: string
     defaultOutput: string
   }
-
-  // File paths and naming
   files: {
     extensions: {
       graphql: string
@@ -33,8 +28,6 @@ export interface GeneratorConfig {
     baseModulePath: string
     presetsFilePath: string
   }
-
-  // Environment variables
   envVars: {
     model: string
     modulePath: string
@@ -45,8 +38,6 @@ export interface GeneratorConfig {
     timestamp: string
     customPlurals: string
   }
-
-  // Content and messages
   content: {
     fallbackMessages: {
       basic: string
@@ -57,11 +48,11 @@ export interface GeneratorConfig {
       errorMessageTemplate: string
     }
   }
-
-  // Type mappings
   typeMappings: {
     prismaToGraphQL: Record<string, string>
   }
+
+  plugins?: Array<PluginConfig>
 }
 
 export interface PartialGeneratorConfig {
@@ -82,6 +73,7 @@ export interface PartialGeneratorConfig {
   typeMappings?: {
     prismaToGraphQL?: GeneratorConfig['typeMappings']['prismaToGraphQL']
   }
+  plugins?: GeneratorConfig['plugins']
 }
 
 /**
@@ -139,7 +131,8 @@ export class ConfigLoader {
       },
       typeMappings: {
         prismaToGraphQL: { ...base.typeMappings.prismaToGraphQL, ...overrides.typeMappings?.prismaToGraphQL }
-      }
+      },
+      plugins: overrides.plugins || base.plugins || []
     }
   }
 

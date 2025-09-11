@@ -17,20 +17,15 @@ import {
   Operation,
   mapOperationToPrismaFunc,
   GraphQLTypes,
+  GeneratorConfig,
+  GraphQLInputField,
 } from './types/newTypes'
 import { config as generatorConfig } from './config/config'
 import { fileExists } from './utils/fileExists'
-import { formatFile } from './utils/formatFile'
-import {
-  COMMON_PLURALS,
-  pascalCase,
-  pluralize,
-  singularize,
-} from './utils/strings'
+import { COMMON_PLURALS, pascalCase, pluralize, singularize } from './utils/strings'
 import { writeFileSafely } from './utils/writeFileSafely'
-import { executeHook, HookContext } from './plugins'
+import { executeHook } from './plugins'
 
-// --- Handlebars Helpers ---
 Handlebars.registerHelper('eq', function (a, b) {
   return a === b
 })
@@ -123,16 +118,10 @@ const mapPrismaTypeToGraphQL = (type: string): string => {
 }
 
 // Helper function to add enum types to base.graphql
-const addEnumToBase = async (
-  enumName: string,
-  dmmf: DMMF.Document,
-): Promise<void> => {
+const addEnumToBase = async (enumName: string, dmmf: DMMF.Document): Promise<void> => {
   const configData = generatorConfig.getConfig()
   // Path relative to the project root
-  const baseGraphQLPath = path.resolve(
-    process.cwd(),
-    configData.files.baseGraphqlPath,
-  )
+  const baseGraphQLPath = path.resolve(process.cwd(), configData.files.baseGraphqlPath)
 
   try {
     console.log(`🔍 Attempting to add enum ${enumName} to ${baseGraphQLPath}`)
@@ -149,9 +138,7 @@ const addEnumToBase = async (
     // Read current base.graphql
     const currentContent = await fs.readFile(baseGraphQLPath, 'utf-8')
     console.log(`📄 Current file length: ${currentContent.length}`)
-    console.log(
-      `📄 Current content preview: ${currentContent.substring(0, 100)}...`,
-    )
+    console.log(`📄 Current content preview: ${currentContent.substring(0, 100)}...`)
 
     // Check if enum already exists
     if (currentContent.includes(`enum ${enumName}`)) {
@@ -168,9 +155,7 @@ ${enumDef.values.map((value: string) => `  ${value}`).join('\n')}
 
     // Add enum to the file (preserve original content and append)
     const updatedContent = currentContent.trimEnd() + '\n' + enumDefinition
-    console.log(
-      `📝 Writing updated content, new length: ${updatedContent.length}`,
-    )
+    console.log(`📝 Writing updated content, new length: ${updatedContent.length}`)
 
     await fs.writeFile(baseGraphQLPath, updatedContent, 'utf-8')
     console.log(`✅ Added enum ${enumName} to base.graphql`)
@@ -227,15 +212,13 @@ const prepareTypesData = async (
       inputObjectTypes = Object.values(allTypes).flat()
     }
 
-    const inputType = inputObjectTypes.find(
-      (type: any) => type.name === typeName,
-    )
+    const inputType = inputObjectTypes.find((type: any) => type.name === typeName)
 
     if (!inputType) return
 
     processedTypes.add(typeName)
 
-    const graphqlType: GraphQLInputType = {
+    let graphqlType: GraphQLInputType = {
       name: inputType.name,
       grouping: inputType?.meta?.grouping,
       fields: inputType.fields.map((field: any) => {
@@ -257,14 +240,29 @@ const prepareTypesData = async (
         const baseType = mapPrismaTypeToGraphQL(preferredType.type)
         const fieldType = preferredType.isList ? `[${baseType}!]` : baseType
 
-        return {
+        let preparedField: GraphQLInputField = {
           name: field.name,
           type: fieldType + (field.isRequired ? '!' : ''),
           isRequired: field?.isRequired ?? false,
           isNullable: field.isNullable,
         }
+
+        preparedField = executeHook('onPreparedTypeField', {
+          ...preparedField,
+          _metadata: {
+            typeCategory,
+          },
+        })
+
+        return preparedField
       }),
     }
+    graphqlType = executeHook('onPreparedType', {
+      ...graphqlType,
+      _metadata: {
+        typeCategory,
+      },
+    })
     if (typeCategory === 'input') {
       inputTypes.push(graphqlType)
     } else {
@@ -280,19 +278,10 @@ const prepareTypesData = async (
   // Map operation types to required input types
   const operationInputTypeMap: Record<string, string[]> = {
     findUnique: [`${modelName}WhereUniqueInput`],
-    findMany: [
-      `${modelName}WhereInput`,
-      `${modelName}OrderByWithRelationInput`,
-    ],
-    findFirst: [
-      `${modelName}WhereInput`,
-      `${modelName}OrderByWithRelationInput`,
-    ],
+    findMany: [`${modelName}WhereInput`, `${modelName}OrderByWithRelationInput`],
+    findFirst: [`${modelName}WhereInput`, `${modelName}OrderByWithRelationInput`],
     count: [`${modelName}WhereInput`],
-    aggregate: [
-      `${modelName}WhereInput`,
-      `${modelName}OrderByWithRelationInput`,
-    ],
+    aggregate: [`${modelName}WhereInput`, `${modelName}OrderByWithRelationInput`],
     groupBy: [
       `${modelName}WhereInput`,
       `${modelName}OrderByWithAggregationInput`,
@@ -301,15 +290,8 @@ const prepareTypesData = async (
     create: [`${modelName}CreateInput`],
     createMany: [`${modelName}CreateManyInput`],
     update: [`${modelName}WhereUniqueInput`, `${modelName}UpdateInput`],
-    updateMany: [
-      `${modelName}WhereInput`,
-      `${modelName}UpdateManyMutationInput`,
-    ],
-    upsert: [
-      `${modelName}WhereUniqueInput`,
-      `${modelName}CreateInput`,
-      `${modelName}UpdateInput`,
-    ],
+    updateMany: [`${modelName}WhereInput`, `${modelName}UpdateManyMutationInput`],
+    upsert: [`${modelName}WhereUniqueInput`, `${modelName}CreateInput`, `${modelName}UpdateInput`],
     delete: [`${modelName}WhereUniqueInput`],
     deleteMany: [`${modelName}WhereInput`],
   }
@@ -374,20 +356,16 @@ const prepareOperationsData = (
         type => type.name === operationType,
       )
 
-      if (!operationsOutputType)
-        throw new Error(`Operation output type not found for ${operation}`)
+      if (!operationsOutputType) throw new Error(`Operation output type not found for ${operation}`)
 
-      const operationOutputType = operationsOutputType.fields.find(
-        type =>
-          type.name === `${mapOperationToPrismaFunc(operation)}${modelName}`,
+      const operationFieldType = operationsOutputType.fields.find(
+        type => type.name === `${mapOperationToPrismaFunc(operation)}${modelName}`,
       )
-      if (!operationOutputType)
-        throw new Error(
-          `Operation output type not found for ${operation}${modelName}`,
-        )
+      if (!operationFieldType)
+        throw new Error(`Operation output type not found for ${operation}${modelName}`)
 
-      const inputArguments = operationOutputType.args
-      const returnType = operationOutputType.outputType
+      const inputArguments = operationFieldType.args
+      const returnType = operationFieldType.outputType
 
       let operationName = ''
 
@@ -410,16 +388,25 @@ const prepareOperationsData = (
 
       let returnString = ''
       if (returnType) {
-        returnString = `${returnType.isList ? '[' : ''}${returnType.type}${returnType.isList ? `${operationOutputType.isNullable ? '!' : ''}]` : ''}${operationOutputType.isNullable ? '!' : ''}`
+        returnString = `${returnType.isList ? '[' : ''}${returnType.type}${returnType.isList ? `${operationFieldType.isNullable ? '!' : ''}]` : ''}${operationFieldType.isNullable ? '!' : ''}`
       }
 
-      return {
+      let operationData: Operation = {
         name: operationName,
         args: argsString,
         returnType: returnString,
         description: `${operation} operation for ${modelName}`,
         operationType: operation,
       }
+
+      operationData = executeHook('onPreparedOperation', {
+        ...operationData,
+        _metadata: {
+          operationFieldType: operationFieldType,
+        },
+      })
+
+      return operationData
     })
     .filter((operation): operation is Operation => operation !== null)
 }
@@ -427,45 +414,54 @@ const prepareOperationsData = (
 // --- Main Orchestrator Function ---
 export async function generateGraphqlModule(
   options: GenerateModuleOptions,
+  config: GeneratorConfig,
 ): Promise<void> {
   const { model, modulePath } = options
   const configData = generatorConfig.getConfig()
   const sdlPath = path.join(modulePath, `${model.name}${configData.files.extensions.graphql}`)
   const resolverPath = path.join(modulePath, `${model.name}${configData.files.extensions.resolver}`)
 
-  // Execute hook for options created
-  const hookContext = await executeHook('onOptionsCreated', {
-    stage: 'onOptionsCreated',
-    timestamp: new Date(),
-    moduleOptions: options,
-    metadata: {}
-  })
-
-  // Use potentially modified options
-  const finalOptions = hookContext.moduleOptions || options
-
   const sdlExists = await fileExists(sdlPath)
   const resolverExists = await fileExists(resolverPath)
 
   // Handle SDL generation
   if (sdlExists) {
-    await updateSdlFile(sdlPath, finalOptions)
-  } else {
-    await compileTemplateFile(
+    executeHook('onUpdateFile', {
       sdlPath,
-      configData.files.templates.graphqlTemplate,
-      finalOptions,
-    )
+      options,
+      config,
+    })
+    await updateSdlFile(sdlPath, options, config)
+  } else {
+    executeHook('onCompileTemplate', {
+      resolverPath,
+      template: configData.files.templates.resolverTemplate,
+      options,
+      config,
+    })
+    await compileTemplateFile(sdlPath, configData.files.templates.graphqlTemplate, options, config)
   }
 
   // Handle resolver generation
   if (resolverExists) {
-    await updateResolverFile(resolverPath, finalOptions)
+    executeHook('onUpdateFile', {
+      sdlPath,
+      options,
+      config,
+    })
+    await updateResolverFile(resolverPath, options, config)
   } else {
+    executeHook('onCompileTemplate', {
+      resolverPath,
+      template: configData.files.templates.resolverTemplate,
+      options,
+      config,
+    })
     await compileTemplateFile(
       resolverPath,
       configData.files.templates.resolverTemplate,
-      finalOptions,
+      options,
+      config,
     )
   }
 }
@@ -474,12 +470,12 @@ async function compileTemplateFile(
   filePath: string,
   templateFilePath: string,
   options: GenerateModuleOptions,
+  config: any,
 ): Promise<void> {
   const { model, queries, mutations } = options
   const configData = generatorConfig.getConfig()
 
-  const modelNameLower =
-    model.name.charAt(0).toLowerCase() + model.name.slice(1)
+  const modelNameLower = model.name.charAt(0).toLowerCase() + model.name.slice(1)
   const modelNamePlural = pluralize(modelNameLower, options.customPlurals)
   const modelNameSingular = COMMON_PLURALS.has(modelNameLower)
     ? singularize(modelNameLower)
@@ -506,25 +502,7 @@ async function compileTemplateFile(
     ...mutationsData.map(mutationData => mutationData.returnType),
   ]
 
-  const types = await prepareTypesData(
-    options.dmmf,
-    model.name,
-    queries,
-    mutations,
-    returnTypes,
-  )
-
-  // Execute hook for types generated
-  const typesHookContext = await executeHook('onTypesGenerated', {
-    stage: 'onTypesGenerated',
-    timestamp: new Date(),
-    moduleOptions: options,
-    graphqlTypes: types,
-    metadata: {}
-  })
-
-  // Use potentially modified types
-  const finalTypes = typesHookContext.graphqlTypes || types
+  const types = await prepareTypesData(options.dmmf, model.name, queries, mutations, returnTypes)
 
   const templateData: HandlebarsTemplateData = {
     modelName: model.name,
@@ -536,71 +514,33 @@ async function compileTemplateFile(
     mutations: mutationsData,
     hasQueries: queries.length > 0,
     hasMutations: mutations.length > 0,
-    inputTypes: finalTypes.input,
-    outputTypes: finalTypes.output,
-    hasInputTypes: finalTypes.input.length > 0,
-    hasOutputTypes: finalTypes.output.length > 0,
+    inputTypes: types.input,
+    outputTypes: types.output,
+    hasInputTypes: types.input.length > 0,
+    hasOutputTypes: types.output.length > 0,
     camelCase: (str: string) => str.charAt(0).toLowerCase() + str.slice(1),
     pascalCase: (str: string) => str.charAt(0).toUpperCase() + str.slice(1),
     dataSourceMethod: configData.content.resolverImplementation.dataSourceMethod,
     errorMessageTemplate: configData.content.resolverImplementation.errorMessageTemplate,
   }
 
-  // Execute hook for template data prepared
-  const templateDataHookContext = await executeHook('onTemplateDataPrepared', {
-    stage: 'onTemplateDataPrepared',
-    timestamp: new Date(),
-    moduleOptions: options,
-    templateData: templateData,
-    metadata: {}
-  })
-
-  // Use potentially modified template data
-  const finalTemplateData = templateDataHookContext.templateData || templateData
-
   const templatePath = path.join(__dirname, templateFilePath)
   const templateContent = await fs.readFile(templatePath, 'utf-8')
   const template = Handlebars.compile(templateContent)
-  const renderedContent = template(finalTemplateData)
+  const renderedContent = template(templateData)
 
-  // Execute hook for content generated (SDL or Resolver)
-  const isSDL = filePath.endsWith('.graphql')
-  const contentHookContext = await executeHook(isSDL ? 'onSDLGenerated' : 'onResolverGenerated', {
-    stage: isSDL ? 'onSDLGenerated' : 'onResolverGenerated',
-    timestamp: new Date(),
-    moduleOptions: options,
-    generatedContent: renderedContent,
-    filePath: filePath,
-    metadata: {}
-  })
-
-  // Use potentially modified content
-  const finalContent = contentHookContext.generatedContent || renderedContent
-
-  await writeFileSafely(filePath, finalContent)
-  
-  // Execute hook for file written
-  await executeHook('onFileWritten', {
-    stage: 'onFileWritten',
-    timestamp: new Date(),
-    moduleOptions: options,
-    filePath: filePath,
-    metadata: {}
-  })
-  
-  await formatFile(filePath)
+  await writeFileSafely(filePath, renderedContent)
 }
 
-// --- File Modification (graphql-js & ts-morph) ---
 async function updateSdlFile(
   filePath: string,
   options: GenerateModuleOptions,
+  config: any,
 ): Promise<void> {
   const { model, queries, mutations, dmmf } = options
   const fileContent = await fs.readFile(filePath, 'utf-8')
   const ast = parse(fileContent)
 
-  // Generate input types needed for the new operations
   const newQueries = prepareOperationsData(
     options.dmmf,
     queries,
@@ -616,20 +556,12 @@ async function updateSdlFile(
     options.customPlurals,
   )
   const returnTypes = [
-    ...newQueries.map(query =>
-      query.returnType.replace('[', '').replace(']', '').replace('!', ''),
-    ),
+    ...newQueries.map(query => query.returnType.replace('[', '').replace(']', '').replace('!', '')),
     ...newMutations.map(mutation =>
       mutation.returnType.replace('[', '').replace(']', '').replace('!', ''),
     ),
   ]
-  const types = await prepareTypesData(
-    dmmf,
-    model.name,
-    queries,
-    mutations,
-    returnTypes,
-  )
+  const types = await prepareTypesData(dmmf, model.name, queries, mutations, returnTypes)
 
   // Helper function to parse argument string into AST nodes
   const parseArguments = (argString: string) => {
@@ -668,9 +600,7 @@ async function updateSdlFile(
           ? {
               kind: 'NonNullType' as const,
               type: {
-                kind: field.type.includes('[')
-                  ? 'ListType'
-                  : ('NamedType' as const),
+                kind: field.type.includes('[') ? 'ListType' : ('NamedType' as const),
                 type: field.type.includes('[')
                   ? {
                       kind: 'NamedType' as const,
@@ -689,9 +619,7 @@ async function updateSdlFile(
               },
             }
           : {
-              kind: field.type.includes('[')
-                ? 'ListType'
-                : ('NamedType' as const),
+              kind: field.type.includes('[') ? 'ListType' : ('NamedType' as const),
               type: field.type.includes('[')
                 ? {
                     kind: 'NamedType' as const,
@@ -714,11 +642,7 @@ async function updateSdlFile(
   // Get existing output type names to avoid duplicates
   const existingOutputTypes = new Set(
     ast.definitions
-      .filter(
-        def =>
-          def.kind === 'ObjectTypeDefinition' &&
-          (def as any).name.value !== model.name,
-      )
+      .filter(def => def.kind === 'ObjectTypeDefinition' && (def as any).name.value !== model.name)
       .map(def => (def as any).name.value),
   )
 
@@ -732,9 +656,7 @@ async function updateSdlFile(
         kind: 'FieldDefinition' as const,
         name: { kind: 'Name' as const, value: field.name },
         type: {
-          kind: field.type.endsWith('!')
-            ? 'NonNullType'
-            : ('NamedType' as const),
+          kind: field.type.endsWith('!') ? 'NonNullType' : ('NamedType' as const),
           type: field.type.endsWith('!')
             ? {
                 kind: 'NamedType' as const,
@@ -755,9 +677,7 @@ async function updateSdlFile(
     Document(node) {
       // Add new input and output types at the beginning of the document (after the main type)
       const mainTypeIndex = node.definitions.findIndex(
-        def =>
-          def.kind === 'ObjectTypeDefinition' &&
-          (def as any).name.value === model.name,
+        def => def.kind === 'ObjectTypeDefinition' && (def as any).name.value === model.name,
       )
 
       const insertIndex = mainTypeIndex >= 0 ? mainTypeIndex + 1 : 0
@@ -772,9 +692,7 @@ async function updateSdlFile(
     },
     ObjectTypeDefinition(node) {
       if (node.name.value === 'Query' && newQueries.length > 0) {
-        const existingQueries = new Set(
-          node.fields?.map(f => f.name.value) || [],
-        )
+        const existingQueries = new Set(node.fields?.map(f => f.name.value) || [])
         const fieldsToAdd = newQueries
           .filter(q => !existingQueries.has(q.name))
           .map(q => ({
@@ -793,9 +711,7 @@ async function updateSdlFile(
       }
 
       if (node.name.value === 'Mutation' && newMutations.length > 0) {
-        const existingMutations = new Set(
-          node.fields?.map(f => f.name.value) || [],
-        )
+        const existingMutations = new Set(node.fields?.map(f => f.name.value) || [])
         const fieldsToAdd = newMutations
           .filter(m => !existingMutations.has(m.name))
           .map(m => ({
@@ -817,9 +733,7 @@ async function updateSdlFile(
     },
     ObjectTypeExtension(node) {
       if (node.name.value === 'Query' && newQueries.length > 0) {
-        const existingQueries = new Set(
-          node.fields?.map(f => f.name.value) || [],
-        )
+        const existingQueries = new Set(node.fields?.map(f => f.name.value) || [])
         const fieldsToAdd = newQueries
           .filter(q => !existingQueries.has(q.name))
           .map(q => ({
@@ -838,9 +752,7 @@ async function updateSdlFile(
       }
 
       if (node.name.value === 'Mutation' && newMutations.length > 0) {
-        const existingMutations = new Set(
-          node.fields?.map(f => f.name.value) || [],
-        )
+        const existingMutations = new Set(node.fields?.map(f => f.name.value) || [])
         const fieldsToAdd = newMutations
           .filter(m => !existingMutations.has(m.name))
           .map(m => ({
@@ -864,48 +776,23 @@ async function updateSdlFile(
 
   const modifiedContent = print(modifiedAst)
 
-  // Execute hook for SDL generated
-  const contentHookContext = await executeHook('onSDLGenerated', {
-    stage: 'onSDLGenerated',
-    timestamp: new Date(),
-    moduleOptions: options,
-    generatedContent: modifiedContent,
-    filePath: filePath,
-    metadata: {}
-  })
-
-  // Use potentially modified content
-  const finalContent = contentHookContext.generatedContent || modifiedContent
-
-  await writeFileSafely(filePath, finalContent)
-  
-  // Execute hook for file written
-  await executeHook('onFileWritten', {
-    stage: 'onFileWritten',
-    timestamp: new Date(),
-    moduleOptions: options,
-    filePath: filePath,
-    metadata: {}
-  })
+  await writeFileSafely(filePath, modifiedContent)
 }
 
 async function updateResolverFile(
   filePath: string,
   options: GenerateModuleOptions,
+  config: any,
 ): Promise<void> {
   const { model, queries, mutations } = options
   const project = new Project()
   const sourceFile = project.addSourceFileAtPath(filePath)
 
-  const modelNameLower =
-    model.name.charAt(0).toLowerCase() + model.name.slice(1)
+  const modelNameLower = model.name.charAt(0).toLowerCase() + model.name.slice(1)
 
   const resolverDeclaration = sourceFile
     .getVariableDeclarations()
-    .find(
-      d =>
-        d.getName().includes('resolvers') || d.getName().includes('Resolvers'),
-    )
+    .find(d => d.getName().includes('resolvers') || d.getName().includes('Resolvers'))
   if (!resolverDeclaration) return
 
   const resolverObject = resolverDeclaration.getInitializerIfKind(
@@ -929,10 +816,7 @@ async function updateResolverFile(
   )
 
   // Helper function to generate resolver implementation based on operation type
-  const getResolverImplementation = (
-    operationType: string,
-    isQuery: boolean = true,
-  ) => {
+  const getResolverImplementation = (operationType: string, isQuery: boolean = true) => {
     const contextPath = `(await context.dataSources.prisma()).${modelNameLower}`
 
     switch (operationType) {
@@ -1035,9 +919,7 @@ async function updateResolverFile(
     }
 
     if (queryProperty) {
-      const queryObject = queryProperty.getChildrenOfKind(
-        SyntaxKind.ObjectLiteralExpression,
-      )[0]
+      const queryObject = queryProperty.getChildrenOfKind(SyntaxKind.ObjectLiteralExpression)[0]
       if (queryObject) {
         const existingQueries = new Set(
           queryObject
@@ -1087,10 +969,7 @@ async function updateResolverFile(
           if (!existingMutations.has(mutation.name)) {
             mutationObject.addPropertyAssignment({
               name: mutation.name,
-              initializer: getResolverImplementation(
-                mutation.operationType,
-                false,
-              ),
+              initializer: getResolverImplementation(mutation.operationType, false),
             })
           }
         })
@@ -1098,35 +977,15 @@ async function updateResolverFile(
     }
   }
 
-  const modifiedContent = sourceFile.getFullText()
+  let modifiedContent = sourceFile.getFullText()
 
-  // Execute hook for resolver generated
-  const contentHookContext = await executeHook('onResolverGenerated', {
-    stage: 'onResolverGenerated',
-    timestamp: new Date(),
-    moduleOptions: options,
-    generatedContent: modifiedContent,
-    filePath: filePath,
-    metadata: {}
-  })
+  modifiedContent = executeHook('onFileWrite', {
+    writeLocation: sourceFile.getFilePath(),
+    content: modifiedContent,
+  }).content
 
-  // If content was modified by hook, write it back to the source file
-  if (contentHookContext.generatedContent && contentHookContext.generatedContent !== modifiedContent) {
-    sourceFile.replaceWithText(contentHookContext.generatedContent)
-  }
-
+  sourceFile.replaceWithText(modifiedContent)
   await sourceFile.save()
-  
-  // Execute hook for file written
-  await executeHook('onFileWritten', {
-    stage: 'onFileWritten',
-    timestamp: new Date(),
-    moduleOptions: options,
-    filePath: filePath,
-    metadata: {}
-  })
-  
-  await formatFile(filePath)
 }
 
 // --- New Main Entry Point ---
@@ -1145,20 +1004,17 @@ export async function generateGraphQLFiles(
     throw new Error(`Model ${config.modelName} not found in DMMF`)
   }
 
-  // Execute hook for model found
-  const modelHookContext = await executeHook('onModelFound', {
-    stage: 'onModelFound',
-    timestamp: new Date(),
-    dmmf: dmmf,
-    model: model,
-    metadata: {}
-  })
-
-  // Use potentially modified model
-  const finalModel = modelHookContext.model || model
+  const generatorConfig: GeneratorConfig = {
+    modelName: config.modelName,
+    modulePath: config.modulePath,
+    operations: [...config.queries, ...config.mutations],
+    queries: config.queries,
+    mutations: config.mutations,
+    customPlurals: config.customPlurals,
+  }
 
   const options: GenerateModuleOptions = {
-    model: finalModel,
+    model,
     queries: config.queries,
     mutations: config.mutations,
     modulePath: config.modulePath,
@@ -1166,5 +1022,5 @@ export async function generateGraphQLFiles(
     customPlurals: config.customPlurals,
   }
 
-  await generateGraphqlModule(options)
+  await generateGraphqlModule(options, generatorConfig)
 }

@@ -46,7 +46,13 @@ describe('Helpers', () => {
       }
       
       // This should not throw an error
-      await expect(helpers.generateGraphqlModule(options)).resolves.not.toThrow()
+      await expect(helpers.generateGraphqlModule(options, {
+        modelName: options.model.name,
+        modulePath: options.modulePath,
+        operations: [...options.queries, ...options.mutations],
+        queries: options.queries,
+        mutations: options.mutations
+      })).resolves.not.toThrow()
     }
   })
 
