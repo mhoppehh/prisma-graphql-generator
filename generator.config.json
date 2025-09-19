@@ -20,23 +20,13 @@
     "baseGraphqlPath": "src/subgraphs/base.graphql",
     "baseModulePath": "src/subgraphs/"
   },
-  "envVars": {
-    "model": "GENERATOR_MODEL",
-    "modulePath": "GENERATOR_MODULE_PATH",
-    "operations": "GENERATOR_OPERATIONS",
-    "queries": "GENERATOR_QUERIES",
-    "mutations": "GENERATOR_MUTATIONS",
-    "presetUsed": "GENERATOR_PRESET_USED",
-    "timestamp": "GENERATOR_TIMESTAMP",
-    "customPlurals": "GENERATOR_CUSTOM_PLURALS"
-  },
   "content": {
     "fallbackMessages": {
       "basic": "",
       "withOperations": ""
     },
     "resolverImplementation": {
-      "dataSourceMethod": "context.dataSources.prisma()",
+      "dataSourceMethod": "context.prisma",
       "errorMessageTemplate": "{operationName} resolver not implemented"
     }
   },
