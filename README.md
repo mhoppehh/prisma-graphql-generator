@@ -1,11 +1,11 @@
 # Prisma GraphQL Generator
 
-[![npm version](https://badge.fury.io/js/prisma-graphql-generator.svg)](https://badge.fury.io/js/prisma-graphql-generator)
+[![npm version](https://badge.fury.io/js/prisma-graphql-module-generator.svg)](https://badge.fury.io/js/prisma-graphql-module-generator)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js->=18.0-green.svg)](https://nodejs.org/)
-[![CI](https://github.com/mhoppehh/prisma-graphql-generator/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/mhoppehh/prisma-graphql-generator/actions)
-[![codecov](https://codecov.io/gh/mhoppehh/prisma-graphql-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/mhoppehh/prisma-graphql-generator)
-[![npm downloads](https://img.shields.io/npm/dm/prisma-graphql-generator.svg)](https://npmjs.org/package/prisma-graphql-generator)
+[![CI](https://github.com/mhoppehh/prisma-graphql-module-generator/workflows/CI%2FCD%20Pipeline/badge.svg)](https://github.com/mhoppehh/prisma-graphql-module-generator/actions)
+[![codecov](https://codecov.io/gh/mhoppehh/prisma-graphql-module-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/mhoppehh/prisma-graphql-module-generator)
+[![npm downloads](https://img.shields.io/npm/dm/prisma-graphql-module-generator.svg)](https://npmjs.org/package/prisma-graphql-module-generator)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
 A powerful and extensible Prisma generator that creates GraphQL schemas and TypeScript resolvers from your Prisma data models. This tool bridges the gap between your database schema and GraphQL API, providing type-safe, customizable code generation with a robust plugin system.
@@ -24,11 +24,11 @@ A powerful and extensible Prisma generator that creates GraphQL schemas and Type
 ## 📦 Installation
 
 ```bash
-npm install prisma-graphql-generator
+npm install prisma-graphql-module-generator
 # or
-yarn add prisma-graphql-generator
+yarn add prisma-graphql-module-generator
 # or
-pnpm add prisma-graphql-generator
+pnpm add prisma-graphql-module-generator
 ```
 
 **Peer Dependencies:**
@@ -46,7 +46,7 @@ Add the generator to your `prisma/schema.prisma` file:
 
 ```prisma
 generator graphql_typedef {
-  provider = "prisma-graphql-generator"
+  provider = "prisma-graphql-module-generator"
   output   = "./generated"
 }
 
@@ -260,8 +260,8 @@ export const resolvers{{pascalCase modelName}} = {
 
 ```bash
 # Clone the repository
-git clone https://github.com/mhoppehh/prisma-graphql-generator.git
-cd prisma-graphql-generator
+git clone https://github.com/mhoppehh/prisma-graphql-module-generator.git
+cd prisma-graphql-module-generator
 
 # Install dependencies
 pnpm install
@@ -279,7 +279,7 @@ pnpm dev
 ### Project Structure
 
 ```
-prisma-graphql-generator/
+prisma-graphql-module-generator/
 ├── src/
 │   ├── bin.ts                 # CLI entry point
 │   ├── generator.ts           # Main generator logic
@@ -442,8 +442,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/mhoppehh/prisma-graphql-generator.git
-   cd prisma-graphql-generator
+   git clone https://github.com/mhoppehh/prisma-graphql-module-generator.git
+   cd prisma-graphql-module-generator
    ```
 
 2. **Install dependencies**
@@ -491,10 +491,10 @@ See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
 
 ## 🆘 Support
 
-- 📖 [Documentation](https://github.com/mhoppehh/prisma-graphql-generator#readme)
-- 🐛 [Issue Tracker](https://github.com/mhoppehh/prisma-graphql-generator/issues)
-- 💬 [Discussions](https://github.com/mhoppehh/prisma-graphql-generator/discussions)
-- 📧 [Email Support](mailto:support@prisma-graphql-generator.com)
+- 📖 [Documentation](https://github.com/mhoppehh/prisma-graphql-module-generator#readme)
+- 🐛 [Issue Tracker](https://github.com/mhoppehh/prisma-graphql-module-generator/issues)
+- 💬 [Discussions](https://github.com/mhoppehh/prisma-graphql-module-generator/discussions)
+- 📧 [Email Support](mailto:support@prisma-graphql-module-generator.com)
 
 ## 📄 License
 
@@ -512,8 +512,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
   <p>Made with ❤️ by the Prisma GraphQL Generator team</p>
   <p>
-    <a href="https://github.com/mhoppehh/prisma-graphql-generator">GitHub</a> •
-    <a href="https://npmjs.com/package/prisma-graphql-generator">NPM</a> •
+    <a href="https://github.com/mhoppehh/prisma-graphql-module-generator">GitHub</a> •
+    <a href="https://npmjs.com/package/prisma-graphql-module-generator">NPM</a> •
     <a href="CHANGELOG.md">Changelog</a> •
     <a href="CONTRIBUTING.md">Contributing</a>
   </p>
@@ -523,8 +523,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - 📖 [Documentation](./docs/CONFIGURATION.md)
-- 🐛 [Issue Tracker](https://github.com/mhoppehh/prisma-graphql-generator/issues)
-- 💬 [Discussions](https://github.com/mhoppehh/prisma-graphql-generator/discussions)
+- 🐛 [Issue Tracker](https://github.com/mhoppehh/prisma-graphql-module-generator/issues)
+- 💬 [Discussions](https://github.com/mhoppehh/prisma-graphql-module-generator/discussions)
 
 ---
 

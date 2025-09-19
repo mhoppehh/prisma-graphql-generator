@@ -8,11 +8,11 @@
   "author": "mhoppehh",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mhoppehh/prisma-graphql-generator.git"
+    "url": "https://github.com/mhoppehh/prisma-graphql-module-generator.git"
   },
-  "homepage": "https://github.com/mhoppehh/prisma-graphql-generator#readme",
+  "homepage": "https://github.com/mhoppehh/prisma-graphql-module-generator#readme",
   "bugs": {
-    "url": "https://github.com/mhoppehh/prisma-graphql-generator/issues"
+    "url": "https://github.com/mhoppehh/prisma-graphql-module-generator/issues"
   },
   "keywords": [
     "prisma",
