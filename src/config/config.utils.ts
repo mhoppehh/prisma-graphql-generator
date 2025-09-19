@@ -7,9 +7,8 @@ import { ConfigLoader, GeneratorConfig, PartialGeneratorConfig } from './config'
 
 /**
  * Load configuration from various sources with fallback priority:
- * 1. Environment variables
- * 2. Configuration file (if provided)
- * 3. Default configuration
+ * 1. Configuration file (if provided)
+ * 2. Default configuration
  */
 export async function loadConfiguration(configPath?: string): Promise<ConfigLoader> {
   let config = new ConfigLoader() // Start with defaults
@@ -17,35 +16,26 @@ export async function loadConfiguration(configPath?: string): Promise<ConfigLoad
   if (configPath) {
     try {
       const fileConfig = await ConfigLoader.loadFromFile(configPath)
-      // Merge file config with defaults
+      // Use file config
       config = fileConfig
     } catch (error) {
       console.warn(`Failed to load config from ${configPath}, using defaults:`, error)
     }
   }
 
-  // Apply environment overrides last (highest priority)
-  const envConfig = ConfigLoader.loadFromEnv()
-  config.updateConfig(envConfig.getConfig())
-  
   return config
 }
 
 /**
- * Get configuration file path from various sources
+ * Get configuration file path from common config file names
  */
 export function getConfigPath(): string | undefined {
-  // Check for explicit config path in environment
-  if (process.env.GENERATOR_CONFIG_PATH) {
-    return path.resolve(process.env.GENERATOR_CONFIG_PATH)
-  }
-
   // Check for common config file names in project root
   const commonConfigFiles = [
     'generator.config.ts',
     'generator.config.js',
     'generator.config.json',
-    '.generator.config.json'
+    '.generator.config.json',
   ]
 
   for (const configFile of commonConfigFiles) {
@@ -104,18 +94,18 @@ export function debugConfiguration(config: GeneratorConfig): void {
   console.log('🔧 Generator Configuration:')
   console.log(`  Pretty Name: ${config.generator.prettyName}`)
   console.log(`  Default Output: ${config.generator.defaultOutput}`)
-  
+
   console.log('\n📁 File Configuration:')
   console.log(`  GraphQL Extension: ${config.files.extensions.graphql}`)
   console.log(`  Resolver Extension: ${config.files.extensions.resolver}`)
   console.log(`  GraphQL Template: ${config.files.templates.graphqlTemplate}`)
   console.log(`  Resolver Template: ${config.files.templates.resolverTemplate}`)
   console.log(`  Base GraphQL Path: ${config.files.baseGraphqlPath}`)
-  
+
   console.log('\n🔀 Data Source:')
   console.log(`  Method: ${config.content.resolverImplementation.dataSourceMethod}`)
   console.log(`  Error Template: ${config.content.resolverImplementation.errorMessageTemplate}`)
-  
+
   console.log('\n🏷️  Type Mappings:')
   Object.entries(config.typeMappings.prismaToGraphQL).forEach(([prisma, graphql]) => {
     console.log(`  ${prisma} → ${graphql}`)

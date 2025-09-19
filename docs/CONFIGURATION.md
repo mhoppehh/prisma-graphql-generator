@@ -4,44 +4,15 @@ The Prisma GraphQL Generator supports a configuration system that allows you to 
 
 ## Configuration Methods
 
-You can configure the generator using any of these methods (in order of priority):
+You can configure the generator using:
 
-1. **Environment Variables** (highest priority)
-2. **Configuration Files**
-3. **Default Values** (lowest priority)
-
-## Environment Variables
-
-### Generator Identity
-```bash
-GENERATOR_DEFAULT_OUTPUT="./src/generated"
-```
-
-### File Extensions
-```bash
-GENERATOR_GRAPHQL_EXT=".gql"
-GENERATOR_RESOLVER_EXT=".resolvers.ts"
-```
-
-### Template Paths
-```bash
-GENERATOR_GRAPHQL_TEMPLATE="custom-templates/schema.hbs"
-GENERATOR_RESOLVER_TEMPLATE="custom-templates/resolvers.hbs"
-```
-
-### Data Source Configuration
-```bash
-GENERATOR_DATA_SOURCE_METHOD="context.prisma"
-```
-
-### Configuration File Path
-```bash
-GENERATOR_CONFIG_PATH="./my-config.json"
-```
+1. **Configuration Files**
+2. **Default Values** (used when no configuration is provided)
 
 ## Configuration Files
 
 ### JSON Configuration
+
 Create a `generator.config.json` file in your project root:
 
 ```json
@@ -81,6 +52,7 @@ Create a `generator.config.json` file in your project root:
 ```
 
 ### TypeScript Configuration
+
 Create a `generator.config.ts` file:
 
 ```typescript
@@ -89,20 +61,20 @@ import { GeneratorConfig } from '@your-org/prisma-graphql-generator'
 const config: PartialGeneratorConfig = {
   generator: {
     prettyName: 'TypeScript GraphQL Generator',
-    defaultOutput: './src/generated'
+    defaultOutput: './src/generated',
   },
   content: {
     resolverImplementation: {
       dataSourceMethod: 'context.dataSources.db()',
-      errorMessageTemplate: 'Resolver for {operationName} needs implementation'
-    }
+      errorMessageTemplate: 'Resolver for {operationName} needs implementation',
+    },
   },
   typeMappings: {
     prismaToGraphQL: {
       DateTime: 'Date',
-      Json: 'JSONObject'
-    }
-  }
+      Json: 'JSONObject',
+    },
+  },
 }
 
 export default config
@@ -111,10 +83,12 @@ export default config
 ## Configuration Options
 
 ### Generator Identity
+
 - `prettyName`: Display name for the generator
 - `defaultOutput`: Default output directory
 
 ### File Configuration
+
 - `extensions.graphql`: GraphQL file extension (default: `.graphql`)
 - `extensions.resolver`: Resolver file extension (default: `.resolver.ts`)
 - `templates.graphqlTemplate`: Path to GraphQL template
@@ -125,29 +99,22 @@ export default config
 - `baseGraphqlPath`: Path to base GraphQL file for enums
 
 ### Content Configuration
+
 - `fallbackMessages.basic`: Message for basic fallback generation
 - `fallbackMessages.withOperations`: Message for fallback with operations
 - `resolverImplementation.dataSourceMethod`: How to access the data source in resolvers
 - `resolverImplementation.errorMessageTemplate`: Template for unimplemented resolver errors
 
 ### Type Mappings
-- `prismaToGraphQL`: Mapping from Prisma types to GraphQL types
 
-### Environment Variables (used in templates)
-- `envVars.model`: Environment variable name for model (default: `GENERATOR_MODEL`)
-- `envVars.modulePath`: Environment variable name for module path
-- `envVars.operations`: Environment variable name for operations
-- `envVars.queries`: Environment variable name for queries
-- `envVars.mutations`: Environment variable name for mutations
-- `envVars.presetUsed`: Environment variable name for preset
-- `envVars.timestamp`: Environment variable name for timestamp
-- `envVars.customPlurals`: Environment variable name for custom plurals
+- `prismaToGraphQL`: Mapping from Prisma types to GraphQL types
 
 ## Migration from Hardcoded Values
 
 The following hardcoded values have been extracted into configuration:
 
 ### Before (Hardcoded)
+
 ```typescript
 // File extensions were hardcoded
 const sdlPath = path.join(modulePath, `${model.name}.graphql`)
@@ -168,6 +135,7 @@ const typeMap = { Int: 'Int', String: 'String', ... }
 ```
 
 ### After (Configurable)
+
 ```typescript
 // File extensions from config
 const configData = generatorConfig.getConfig()
@@ -191,18 +159,22 @@ configData.typeMappings.prismaToGraphQL[type] || type
 ## Usage Examples
 
 ### 1. Using with Different File Extensions
+
 ```bash
 GENERATOR_GRAPHQL_EXT=".gql"
 GENERATOR_RESOLVER_EXT=".resolvers.ts"
 ```
 
 ### 2. Using Custom Data Source
+
 ```bash
 GENERATOR_DATA_SOURCE_METHOD="context.db"
 ```
 
 ### 3. Using Custom Templates
+
 Create your own Handlebars templates and configure their paths:
+
 ```json
 {
   "files": {
@@ -215,6 +187,7 @@ Create your own Handlebars templates and configure their paths:
 ```
 
 ### 4. Using Different Type Mappings
+
 ```json
 {
   "typeMappings": {

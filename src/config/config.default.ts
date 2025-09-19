@@ -26,17 +26,6 @@ const config: GeneratorConfig = {
     presetsFilePath: 'prisma/presets.json',
   },
 
-  envVars: {
-    model: 'GENERATOR_MODEL',
-    modulePath: 'GENERATOR_MODULE_PATH',
-    operations: 'GENERATOR_OPERATIONS',
-    queries: 'GENERATOR_QUERIES',
-    mutations: 'GENERATOR_MUTATIONS',
-    presetUsed: 'GENERATOR_PRESET_USED',
-    timestamp: 'GENERATOR_TIMESTAMP',
-    customPlurals: 'GENERATOR_CUSTOM_PLURALS',
-  },
-
   content: {
     fallbackMessages: {
       basic: '// GraphQL generator fallback - please use specific model generation',

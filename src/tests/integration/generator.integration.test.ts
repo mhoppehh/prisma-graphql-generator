@@ -34,7 +34,7 @@ jest.setTimeout(15000)
 
 jest.mock('fs', () => {
   // Require the original module to not break webpack dependencies
-  const actualFs = jest.requireActual('fs');
+  const actualFs = jest.requireActual('fs')
 
   return {
     ...actualFs, // Preserve all the original functionality
@@ -43,8 +43,8 @@ jest.mock('fs', () => {
       // Override only the function you want to mock
       writeFile: jest.fn().mockResolvedValue(undefined),
     },
-  };
-});
+  }
+})
 jest.mock('@prisma/internals', () => ({
   logger: {
     info: jest.fn(),
@@ -57,12 +57,8 @@ jest.mock('../../utils/writeFileSafely')
 jest.mock('../../utils/readExistingFile')
 jest.mock('../../utils/fileExists')
 
-const mockWriteFileSafely = writeFileSafely as jest.MockedFunction<
-  typeof writeFileSafely
->
-const mockReadExistingFile = readExistingFile as jest.MockedFunction<
-  typeof readExistingFile
->
+const mockWriteFileSafely = writeFileSafely as jest.MockedFunction<typeof writeFileSafely>
+const mockReadExistingFile = readExistingFile as jest.MockedFunction<typeof readExistingFile>
 const mockFileExists = fileExists as jest.MockedFunction<typeof fileExists>
 
 const getWrittenFiles = () => {
@@ -84,18 +80,18 @@ const validateGraphQLSDL = (sdlContent: string): { isValid: boolean; errors: str
   try {
     // Try to build a schema from it
     const schema = buildSchema(sdlContent)
-    
+
     // Validate the schema
     const errors = validateSchema(schema)
-    
+
     return {
       isValid: errors.length === 0,
-      errors: errors.map(error => error.message)
+      errors: errors.map(error => error.message),
     }
   } catch (error) {
     return {
       isValid: false,
-      errors: [error instanceof Error ? error.message : 'Unknown GraphQL parsing error']
+      errors: [error instanceof Error ? error.message : 'Unknown GraphQL parsing error'],
     }
   }
 }
@@ -110,14 +106,14 @@ export function validateTypeScriptCode(code: string): ts.Diagnostic[] {
     esModuleInterop: true,
     skipLibCheck: true,
     forceConsistentCasingInFileNames: true,
-  };
+  }
 
-  const fileName = 'in-memory-file.ts';
+  const fileName = 'in-memory-file.ts'
 
   // Create an in-memory compiler host. This allows the compiler to "read" our
   // string as if it were a file.
-  const host = ts.createCompilerHost(compilerOptions, true);
-  const originalGetSourceFile = host.getSourceFile;
+  const host = ts.createCompilerHost(compilerOptions, true)
+  const originalGetSourceFile = host.getSourceFile
 
   host.getSourceFile = (name, languageVersion, onError) => {
     if (name === fileName) {
@@ -127,11 +123,11 @@ export function validateTypeScriptCode(code: string): ts.Diagnostic[] {
         code,
         languageVersion,
         true, // Set parent pointers.
-      );
+      )
     }
     // For lib files (e.g., lib.d.ts), delegate to the original implementation.
-    return originalGetSourceFile(name, languageVersion, onError);
-  };
+    return originalGetSourceFile(name, languageVersion, onError)
+  }
 
   // Create a program from our in-memory file.
   const program = ts.createProgram([fileName], compilerOptions, host)
@@ -147,25 +143,19 @@ export function formatDiagnostics(diagnostics: readonly ts.Diagnostic[]): string
     if (diagnostic.file && typeof diagnostic.start === 'number') {
       const { line, character } = ts.getLineAndCharacterOfPosition(
         diagnostic.file,
-        diagnostic.start
-      );
-      const message = ts.flattenDiagnosticMessageText(
-        diagnostic.messageText,
-        '\n'
-      );
-      return `Error(${line + 1},${character + 1}): ${message}`;
+        diagnostic.start,
+      )
+      const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+      return `Error(${line + 1},${character + 1}): ${message}`
     } else {
-      return ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+      return ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
     }
-  });
+  })
 }
 
 describe('Generator Integration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    Object.keys(process.env)
-      .filter(key => key.startsWith('GENERATOR_'))
-      .forEach(key => delete process.env[key])
     mockFileExists.mockImplementation(() => Promise.resolve(false))
     mockReadExistingFile.mockImplementation(() => Promise.resolve(''))
     mockWriteFileSafely.mockImplementation(() => Promise.resolve(undefined))
@@ -176,7 +166,7 @@ describe('Generator Integration Tests', () => {
     models: {
       values: [
         'Employee',
-        'Category', 
+        'Category',
         'Customer',
         'Order',
         'Product',
@@ -187,23 +177,23 @@ describe('Generator Integration Tests', () => {
         'Shipper',
         'OrderDetail',
         'CustomerCustomerDemo',
-        'CustomerDemographic'
+        'CustomerDemographic',
       ],
-      multi: false // Single choice - one model at a time
+      multi: false, // Single choice - one model at a time
     },
     queries: {
       values: ['findUnique', 'findMany', 'findFirst'],
-      multi: true // Multi-choice - can have multiple queries
+      multi: true, // Multi-choice - can have multiple queries
     },
     mutations: {
       // values: ['create'],
       values: ['create', 'createMany', 'update', 'updateMany', 'upsert', 'delete', 'deleteMany'],
-      multi: true // Multi-choice - can have multiple mutations
+      multi: true, // Multi-choice - can have multiple mutations
     },
     modulePaths: {
       values: ['./src/modules', './generated/modules', './api/graphql'],
-      multi: false // Single choice - one module path at a time
-    }
+      multi: false, // Single choice - one module path at a time
+    },
   }
 
   // Generate all combinations using cartesian product
@@ -228,7 +218,7 @@ describe('Generator Integration Tests', () => {
         // Set up environment variables
         process.env.GENERATOR_MODEL = model
         process.env.GENERATOR_MODULE_PATH = modulePath
-        
+
         if (queriesStr) {
           process.env.GENERATOR_QUERIES = queriesStr
         }
@@ -242,20 +232,12 @@ describe('Generator Integration Tests', () => {
         expect(mockWriteFileSafely).toHaveBeenCalled()
         const writeCalls = mockWriteFileSafely.mock.calls
         expect(writeCalls.length).toBeGreaterThan(0)
-        
+
         // Verify that the model name appears in at least one file path
-        expect(
-          writeCalls.some(call => 
-            call[0].includes(model)
-          )
-        ).toBe(true)
+        expect(writeCalls.some(call => call[0].includes(model))).toBe(true)
 
         // Verify module path is used correctly
-        expect(
-          writeCalls.some(call => 
-            call[0].includes(modulePath.replace('./', ''))
-          )
-        ).toBe(true)
+        expect(writeCalls.some(call => call[0].includes(modulePath.replace('./', '')))).toBe(true)
 
         // TODO: Validate generated GraphQL SDL
         // const sdlContent = getSDLContent()
@@ -276,7 +258,7 @@ describe('Generator Integration Tests', () => {
         //   expect(diagnostics).toHaveLength(0)
         // }
       })
-    }
+    },
   )
 
   // Test specific scenarios with existing files
@@ -306,7 +288,7 @@ describe('Generator Integration Tests', () => {
   //     'File merge scenarios',
   //     (models, existingFileTypes, operations) => {
   //       const model = models[0]
-  //       const existingFileType = existingFileTypes[0] 
+  //       const existingFileType = existingFileTypes[0]
   //       const operation = operations[0]
 
   //       it(`should handle ${model} with existing ${existingFileType} files and operations ${JSON.stringify(operation)}`, async () => {
@@ -351,7 +333,7 @@ describe('Generator Integration Tests', () => {
   //         // Set environment variables
   //         process.env.GENERATOR_MODEL = model
   //         process.env.GENERATOR_MODULE_PATH = './src/modules'
-          
+
   //         if (operation.queries.length > 0) {
   //           process.env.GENERATOR_QUERIES = operation.queries.join(',')
   //         }
@@ -419,7 +401,7 @@ describe('Generator Integration Tests', () => {
 
   //         process.env.GENERATOR_MODEL = model
   //         process.env.GENERATOR_MODULE_PATH = './src/modules'
-          
+
   //         if (operation.queries.length > 0) {
   //           process.env.GENERATOR_QUERIES = operation.queries.join(',')
   //         }
@@ -478,7 +460,7 @@ describe('Generator Integration Tests', () => {
   //         process.env.GENERATOR_MODEL = model
   //         process.env.GENERATOR_MODULE_PATH = './src/modules'
   //         process.env.GENERATOR_QUERIES = queriesStr
-          
+
   //         if (customPlural) {
   //           process.env.GENERATOR_CUSTOM_PLURALS = customPlural
   //         }
@@ -527,7 +509,7 @@ describe('Generator Integration Tests', () => {
   //       it(`should generate for Model: ${model}, Q: [${queriesStr}], M: [${mutationsStr}]`, async () => {
   //         process.env.GENERATOR_MODEL = model
   //         process.env.GENERATOR_MODULE_PATH = './src/modules'
-          
+
   //         if (queriesStr) {
   //           process.env.GENERATOR_QUERIES = queriesStr
   //         }
@@ -538,7 +520,7 @@ describe('Generator Integration Tests', () => {
   //         await onGenerate(options)
 
   //         expect(mockWriteFileSafely).toHaveBeenCalled()
-          
+
   //         // Log for debugging purposes
   //         logGeneratedContent()
   //       })

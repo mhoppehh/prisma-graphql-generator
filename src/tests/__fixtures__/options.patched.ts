@@ -1,9 +1,7 @@
 import { GeneratorOptions } from '@prisma/generator-helper'
 
-// Import the original options
 import rawOptions from './generated/options'
 
-// Helper to convert string kind to FieldKind enum
 const fieldKind = (kind: string) => {
   switch (kind) {
     case 'scalar':
@@ -17,7 +15,6 @@ const fieldKind = (kind: string) => {
   }
 }
 
-// Helper to convert string index type to IndexType enum
 const indexType = (type: string) => {
   switch (type) {
     case 'unique':
@@ -33,17 +30,14 @@ const indexType = (type: string) => {
   }
 }
 
-// Patch the DMMF models to use FieldKind and IndexType enums
 const patchedOptions: GeneratorOptions = {
   ...rawOptions,
   generator: {
     ...rawOptions.generator,
-    binaryTargets: (rawOptions.generator.binaryTargets || []).map(
-      (target: any) => ({
-        ...target,
-        native: Boolean(target?.native),
-      }),
-    ),
+    binaryTargets: (rawOptions.generator.binaryTargets || []).map((target: any) => ({
+      ...target,
+      native: Boolean(target?.native),
+    })),
   },
   dmmf: {
     ...rawOptions.dmmf,
@@ -63,28 +57,26 @@ const patchedOptions: GeneratorOptions = {
     },
     mappings: {
       ...rawOptions.dmmf.mappings,
-      modelOperations: rawOptions.dmmf.mappings.modelOperations.map(
-        (op: any) => {
-          const patchedOp = { ...op }
-          if ('createOne' in patchedOp) {
-            patchedOp.create = patchedOp.createOne
-            delete patchedOp.createOne
-          }
-          if ('deleteOne' in patchedOp) {
-            patchedOp.delete = patchedOp.deleteOne
-            delete patchedOp.deleteOne
-          }
-          if ('updateOne' in patchedOp) {
-            patchedOp.update = patchedOp.updateOne
-            delete patchedOp.updateOne
-          }
-          if ('upsertOne' in patchedOp) {
-            patchedOp.upsert = patchedOp.upsertOne
-            delete patchedOp.upsertOne
-          }
-          return patchedOp
-        },
-      ),
+      modelOperations: rawOptions.dmmf.mappings.modelOperations.map((op: any) => {
+        const patchedOp = { ...op }
+        if ('createOne' in patchedOp) {
+          patchedOp.create = patchedOp.createOne
+          delete patchedOp.createOne
+        }
+        if ('deleteOne' in patchedOp) {
+          patchedOp.delete = patchedOp.deleteOne
+          delete patchedOp.deleteOne
+        }
+        if ('updateOne' in patchedOp) {
+          patchedOp.update = patchedOp.updateOne
+          delete patchedOp.updateOne
+        }
+        if ('upsertOne' in patchedOp) {
+          patchedOp.upsert = patchedOp.upsertOne
+          delete patchedOp.upsertOne
+        }
+        return patchedOp
+      }),
     },
   },
 } as any
