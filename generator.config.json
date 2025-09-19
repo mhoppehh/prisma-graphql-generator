@@ -26,7 +26,7 @@
       "withOperations": ""
     },
     "resolverImplementation": {
-      "dataSourceMethod": "context.dataSources.prisma()",
+      "dataSourceMethod": "context.prisma",
       "errorMessageTemplate": "{operationName} resolver not implemented"
     }
   },
