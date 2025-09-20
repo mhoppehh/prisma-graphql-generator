@@ -1,22 +1,62 @@
 {
-  "name": "prisma-generator-graphql-test",
-  "description": "Generates a gql schema from prisma object",
-  "version": "9.9.9",
+  "name": "prisma-graphql-module-generator",
+  "description": "A powerful Prisma generator that creates GraphQL schemas and TypeScript resolvers from your Prisma data models with extensible plugin system",
+  "version": "0.1.0",
   "main": "dist/generator.js",
+  "types": "dist/generator.d.ts",
   "license": "MIT",
+  "author": "mhoppehh",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhoppehh/prisma-graphql-module-generator.git"
+  },
+  "homepage": "https://github.com/mhoppehh/prisma-graphql-module-generator#readme",
+  "bugs": {
+    "url": "https://github.com/mhoppehh/prisma-graphql-module-generator/issues"
+  },
+  "keywords": [
+    "prisma",
+    "graphql",
+    "generator",
+    "typescript",
+    "schema",
+    "resolvers",
+    "codegen",
+    "database",
+    "orm",
+    "api"
+  ],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "bin": {
-    "prisma-generator-graphql-typedef": "dist/bin.js"
+    "prisma-graphql-module-generator": "dist/bin.js"
   },
   "engines": {
     "node": ">=18.0"
   },
   "scripts": {
+    "build": "npx tsc",
+    "build:watch": "npx tsc -w",
     "start": "node dist/bin.js",
     "dev": "npx tsc -w",
-    "build": "npx tsc",
-    "prepack": "pnpm build",
     "test": "npx jest",
+    "test:watch": "npx jest --watch",
+    "test:coverage": "npx jest --coverage",
     "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
+    "clean": "rm -rf dist",
+    "prepack": "pnpm clean && pnpm build",
+    "prepublishOnly": "pnpm test && pnpm lint && pnpm build",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
     "prisma:generate:sdl": "prisma generate --generator=graphql_typedef --schema=./prisma/schema.prisma",
     "prisma:generate:script": "tsx ./prisma-generator.js"
   },
@@ -39,9 +79,33 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
     "@types/node": "^24.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^9.0.0",
     "jest": "^30.1.3",
+    "lint-staged": "^15.0.0",
     "prisma": "^6.15.0",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
+  },
+  "peerDependencies": {
+    "@prisma/client": "^5.0.0 || ^6.0.0",
+    "prisma": "^5.0.0 || ^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   }
 }

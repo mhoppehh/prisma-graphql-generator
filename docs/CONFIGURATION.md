@@ -56,7 +56,7 @@ Create a `generator.config.json` file in your project root:
 Create a `generator.config.ts` file:
 
 ```typescript
-import { GeneratorConfig } from '@your-org/prisma-graphql-generator'
+import { GeneratorConfig } from '@your-org/prisma-graphql-module-generator'
 
 const config: PartialGeneratorConfig = {
   generator: {
