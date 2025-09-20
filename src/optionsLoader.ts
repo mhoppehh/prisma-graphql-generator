@@ -19,7 +19,6 @@ export async function readScriptOptions(fallbackPath?: string): Promise<ScriptOp
   try {
     const configData = generatorConfig.getConfig()
 
-    // Try to find script options file
     const possiblePaths = ['script-options.json', '.script-options.json', fallbackPath].filter(
       Boolean,
     )

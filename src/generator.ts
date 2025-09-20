@@ -25,7 +25,6 @@ async function readScriptOptions(optionsPath: string): Promise<{
   customPlurals?: Record<string, string>
 } | null> {
   try {
-    // Check if there's a script options file alongside the options.json
     const scriptOptionsPath = optionsPath.replace('options.json', 'script-options.json')
 
     if (await fileExists(scriptOptionsPath)) {
@@ -60,7 +59,6 @@ export const onGenerate = async (options: GeneratorOptions) => {
     await writeFileSafely(optionsPath, JSON.stringify(options, null, 2))
     logger.info(`${GENERATOR_NAME}: Options saved to ${optionsPath}`)
 
-    // Read script options instead of environment variables
     const scriptOptions = await readScriptOptions(optionsPath)
 
     if (!scriptOptions) {

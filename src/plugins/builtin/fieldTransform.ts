@@ -6,15 +6,10 @@ import {
  * Configuration for the field transformation plugin
  */
 export interface FieldTransformConfig {
-  // Field name transformations
   fieldNameTransforms?: Record<string, string>
-  // Add description to specific fields
   fieldDescriptions?: Record<string, string>
-  // Add custom directives to fields
   fieldDirectives?: Record<string, string[]>
-  // Exclude specific fields from generation
   excludeFields?: string[]
-  // Transform field types
   typeTransforms?: Record<string, string>
 }
 
@@ -38,13 +33,11 @@ export function createFieldTransformPlugin(config: FieldTransformConfig): Plugin
   return {
     ...fieldTransformPlugin,
     initialize: async (pluginManager) => {
-      // Store config in metadata for hooks to access
       const context = {
         stage: 'onGenerateStart' as const,
         timestamp: new Date(),
         metadata: { fieldTransformConfig: config }
       }
-      // This would ideally be stored in the plugin manager context
     }
   }
 }

@@ -1,4 +1,3 @@
-// Mock ts-morph before any imports that might use it
 jest.mock('ts-morph', () => ({
   Project: jest.fn().mockImplementation(() => ({
     addSourceFileAtPath: jest.fn(),
@@ -52,7 +51,6 @@ const mockReadExistingFile = readExistingFile as jest.MockedFunction<typeof read
 const mockFileExists = fileExists as jest.MockedFunction<typeof fileExists>
 
 const captureGeneratedOutput = () => {
-  // Helper function to capture and normalize generated files for snapshots
   const calls = mockWriteFileSafely.mock.calls
 
   const filteredCalls = calls.filter(call => {
@@ -60,17 +58,14 @@ const captureGeneratedOutput = () => {
     const fileName = path.basename(filePath)
     const extension = path.extname(fileName)
 
-    // Exclude all JSON files (especially options.json with DMMF data)
     if (extension === '.json') {
       return false
     }
 
-    // Exclude schema.ts (contains generated TypeScript types)
     if (fileName === 'schema.ts') {
       return false
     }
 
-    // Only include actual generated GraphQL and resolver files
     const shouldInclude =
       (filePath.includes('.graphql') ||
         filePath.includes('.resolver.') ||
@@ -87,10 +82,10 @@ const captureGeneratedOutput = () => {
       content: call[1]
         .replace(/\/\* Generated at .+ \*\//, '/* Generated at <TIMESTAMP> */')
         .replace(/Generated on: .+/, 'Generated on: <DATE>')
-        .replace(/\r\n/g, '\n') // Normalize line endings
-        .trim(), // Remove leading/trailing whitespace
+        .replace(/\r\n/g, '\n')
+        .trim(),
     }))
-    .filter(file => file.content.length > 0) // Remove empty files
+    .filter(file => file.content.length > 0)
 }
 
 describe('Generator Cartesian Product Snapshot Tests', () => {
@@ -105,7 +100,6 @@ describe('Generator Cartesian Product Snapshot Tests', () => {
   })
 
   describe('Core Generator Output Snapshots', () => {
-    // Define key combinations we want to snapshot
     const snapshotParameters = {
       scenarios: {
         values: [
@@ -140,7 +134,6 @@ describe('Generator Cartesian Product Snapshot Tests', () => {
       const scenario = scenarios[0]
 
       it(`should generate correct output for ${scenario.model} with ${scenario.description}`, async () => {
-        // Set environment variables based on scenario
         process.env.GENERATOR_MODEL = scenario.model
         process.env.GENERATOR_MODULE_PATH = './src/modules'
 
@@ -151,10 +144,8 @@ describe('Generator Cartesian Product Snapshot Tests', () => {
           process.env.GENERATOR_MUTATIONS = scenario.mutations.join(',')
         }
 
-        // Run the generator
         await onGenerate(options)
 
-        // Capture and snapshot the output
         const generatedOutput = captureGeneratedOutput()
 
         const snapshot = {
@@ -167,7 +158,6 @@ describe('Generator Cartesian Product Snapshot Tests', () => {
           files: generatedOutput,
         }
 
-        // Create snapshot with descriptive name
         expect(snapshot).toMatchSnapshot(
           `generator-output-${scenario.model}-${scenario.description}`,
         )
@@ -204,7 +194,6 @@ describe('Generator Cartesian Product Snapshot Tests', () => {
       const scenario = scenarios[0]
 
       it(`should handle ${scenario.description} for ${scenario.model}`, async () => {
-        // Setup file existence mocking
         if (scenario.existingType === 'sdl') {
           mockFileExists.mockImplementation((filePath: string) =>
             Promise.resolve(filePath.includes('.sdl')),
@@ -226,7 +215,6 @@ type Query {
           })
         }
 
-        // Set environment variables
         process.env.GENERATOR_MODEL = scenario.model
         process.env.GENERATOR_MODULE_PATH = './src/modules'
 
@@ -237,10 +225,8 @@ type Query {
           process.env.GENERATOR_MUTATIONS = scenario.mutations.join(',')
         }
 
-        // Run the generator
         await onGenerate(options)
 
-        // Capture and snapshot the output
         const generatedOutput = captureGeneratedOutput()
 
         const snapshot = {

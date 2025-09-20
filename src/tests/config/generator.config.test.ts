@@ -23,7 +23,7 @@ describe('ConfigLoader', () => {
       const config = loader.getConfig()
 
       expect(config.generator.prettyName).toBe('Custom Generator')
-      expect(config.files.extensions.graphql).toBe(defaultConfig.files.extensions.graphql) // Should keep default
+      expect(config.files.extensions.graphql).toBe(defaultConfig.files.extensions.graphql)
     })
 
     it('should deeply merge nested configurations', () => {

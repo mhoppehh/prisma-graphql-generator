@@ -1,6 +1,5 @@
 import { GeneratorConfig } from './config'
 
-// Example TypeScript configuration - only override what you need to change
 const config: GeneratorConfig = {
   generator: {
     prettyName: 'Prisma GraphQL Generator',

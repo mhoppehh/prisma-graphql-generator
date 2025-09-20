@@ -9,7 +9,6 @@ import defaultConfig from '../../config/config.default'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 
-// Mock fs module
 jest.mock('fs/promises')
 const mockFs = fs as jest.Mocked<typeof fs>
 
@@ -50,7 +49,7 @@ describe('config.utils', () => {
       const config = await loadConfiguration('./test-config.json')
 
       expect(mockFs.readFile).toHaveBeenCalledWith(path.resolve('./test-config.json'), 'utf-8')
-      expect(warnSpy).not.toHaveBeenCalled() // Should not warn on successful load
+      expect(warnSpy).not.toHaveBeenCalled()
       expect(config.getConfig().generator.prettyName).toBe('Prisma GraphQL Generator')
 
       warnSpy.mockRestore()
@@ -78,7 +77,6 @@ describe('config.utils', () => {
       const mockResolve = jest.fn()
       Object.assign(mockResolve, { paths: jest.fn() })
 
-      // Mock first file to be found
       mockResolve
         .mockImplementationOnce(() => path.resolve(process.cwd(), 'generator.config.json'))
         .mockImplementation(() => {
@@ -129,7 +127,7 @@ describe('config.utils', () => {
       const invalidConfig: PartialGeneratorConfig = {
         generator: {
           prettyName: 'Test',
-          defaultOutput: '', // Empty output
+          defaultOutput: '',
         },
       }
 
@@ -142,8 +140,8 @@ describe('config.utils', () => {
       const invalidConfig: PartialGeneratorConfig = {
         files: {
           extensions: {
-            graphql: 'graphql', // Missing dot
-            resolver: 'resolver.ts', // Missing dot
+            graphql: 'graphql',
+            resolver: 'resolver.ts',
           },
           templates: {
             graphqlTemplate: 'template.hbs',
@@ -173,8 +171,8 @@ describe('config.utils', () => {
             resolver: '.resolver.ts',
           },
           templates: {
-            graphqlTemplate: '', // Empty template
-            resolverTemplate: '   ', // Whitespace only
+            graphqlTemplate: '',
+            resolverTemplate: '   ',
           },
           fallbackFiles: {
             schemaTs: 'schema.ts',
