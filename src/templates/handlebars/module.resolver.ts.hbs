@@ -6,26 +6,26 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
 {{#each queries}}
     {{name}}: async (_parent, args, context) => {
       {{#if (eq operationType "findUnique")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findUnique({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.findUnique({
         where: args.where,
       });
       {{else if (eq operationType "findFirst")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findFirst({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.findFirst({
         where: args.where,
       });
       {{else if (eq operationType "findMany")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.findMany({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.findMany({
         where: args.where,
         orderBy: args.orderBy,
         take: args.take,
         skip: args.skip,
       });
       {{else if (eq operationType "count")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.count({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.count({
         where: args.where,
       });
       {{else if (eq operationType "aggregate")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.aggregate({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.aggregate({
         where: args.where,
         _count: args._count,
         _avg: args._avg,
@@ -34,7 +34,7 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
         _max: args._max,
       });
       {{else if (eq operationType "groupBy")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.groupBy({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.groupBy({
         by: args.by,
         where: args.where,
         having: args.having,
@@ -55,36 +55,36 @@ export const resolvers{{pascalCase modelName}}: {{pascalCase modelName}}Module.R
 {{#each mutations}}
     {{name}}: async (_parent, args, context) => {
       {{#if (eq operationType "create")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.create({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.create({
         data: args.data,
       });
       {{else if (eq operationType "createMany")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.createMany({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.createMany({
         data: args.data,
         skipDuplicates: args.skipDuplicates,
       });
       {{else if (eq operationType "update")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.update({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.update({
         where: args.where,
         data: args.data,
       });
       {{else if (eq operationType "updateMany")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.updateMany({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.updateMany({
         where: args.where,
         data: args.data,
       });
       {{else if (eq operationType "upsert")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.upsert({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.upsert({
         where: args.where,
         create: args.create,
         update: args.update,
       });
       {{else if (eq operationType "delete")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.delete({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.delete({
         where: args.where,
       });
       {{else if (eq operationType "deleteMany")}}
-      return (await {{../dataSourceMethod}}).{{../modelNameLower}}.deleteMany({
+      return {{../dataSourceMethod}}.{{../modelNameLower}}.deleteMany({
         where: args.where,
       });
       {{else}}

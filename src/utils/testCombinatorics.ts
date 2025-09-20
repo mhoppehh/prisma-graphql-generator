@@ -1,4 +1,3 @@
-// Utility functions for generating all parameter combinations, supporting multi-choice (multi-select) and single-choice parameters.
 
 /**
  * Generate all possible subsets (the power set) of an array.

@@ -88,7 +88,6 @@ const createList = (itemType: ItemType, item: DMMF.Field): string => {
   return `${itemType.dataType}${requiredSuffix}`
 }
 
-// --- Template Data Preparation ---
 const prepareFieldsData = (model: DMMF.Model): GraphQLField[] => {
   return model.fields
     .map(field => {
@@ -100,33 +99,24 @@ const prepareFieldsData = (model: DMMF.Model): GraphQLField[] => {
         type: createList(itemType, field),
         isRequired: field.isRequired,
         isList: field.isList,
-        // directives: field.isId
-        //   ? ['@id']
-        //   : field.isUnique
-        //     ? ['@unique']
-        //     : undefined,
       }
       return graphqlField
     })
     .filter((field): field is GraphQLField => field !== null)
 }
 
-// --- Input/Output Type Processing ---
 const mapPrismaTypeToGraphQL = (type: string): string => {
   const configData = generatorConfig.getConfig()
   return configData.typeMappings.prismaToGraphQL[type] || type
 }
 
-// Helper function to add enum types to base.graphql
 const addEnumToBase = async (enumName: string, dmmf: DMMF.Document): Promise<void> => {
   const configData = generatorConfig.getConfig()
-  // Path relative to the project root
   const baseGraphQLPath = path.resolve(process.cwd(), configData.files.baseGraphqlPath)
 
   try {
     console.log(`🔍 Attempting to add enum ${enumName} to ${baseGraphQLPath}`)
 
-    // Find the enum definition in DMMF
     const enumTypes = dmmf.schema.enumTypes.prisma || []
     const enumDef = enumTypes.find((e: any) => e.name === enumName)
 
@@ -135,25 +125,45 @@ const addEnumToBase = async (enumName: string, dmmf: DMMF.Document): Promise<voi
       return
     }
 
-    // Read current base.graphql
-    const currentContent = await fs.readFile(baseGraphQLPath, 'utf-8')
+    let currentContent = ''
+
+    const baseExists = await fileExists(baseGraphQLPath)
+    if (!baseExists) {
+      console.log(`📄 Base GraphQL file doesn't exist, creating from template...`)
+
+      const baseDir = path.dirname(baseGraphQLPath)
+      await fs.mkdir(baseDir, { recursive: true })
+
+      const templatePath = path.join(__dirname, 'templates/handlebars/base.graphql.hbs')
+      const templateExists = await fileExists(templatePath)
+
+      if (!templateExists) {
+        throw new Error(
+          `Template file not found at ${templatePath}. Please create the template file first.`,
+        )
+      }
+
+      currentContent = await fs.readFile(templatePath, 'utf-8')
+      await fs.writeFile(baseGraphQLPath, currentContent, 'utf-8')
+      console.log(`✅ Created base GraphQL file at ${baseGraphQLPath}`)
+    } else {
+      currentContent = await fs.readFile(baseGraphQLPath, 'utf-8')
+    }
+
     console.log(`📄 Current file length: ${currentContent.length}`)
     console.log(`📄 Current content preview: ${currentContent.substring(0, 100)}...`)
 
-    // Check if enum already exists
     if (currentContent.includes(`enum ${enumName}`)) {
       console.log(`⚠️ Enum ${enumName} already exists, skipping`)
-      return // Enum already exists
+      return
     }
 
-    // Generate enum definition
     const enumDefinition = `
 enum ${enumName} {
 ${enumDef.values.map((value: string) => `  ${value}`).join('\n')}
 }
 `
 
-    // Add enum to the file (preserve original content and append)
     const updatedContent = currentContent.trimEnd() + '\n' + enumDefinition
     console.log(`📝 Writing updated content, new length: ${updatedContent.length}`)
 
@@ -188,7 +198,6 @@ const prepareTypesData = async (
   const outputTypes: GraphQLOutputType[] = []
   const neededEnums = new Set<string>()
 
-  // Helper function to recursively process input types
   const processType = (
     typeName: string,
     typeCategory: 'input' | 'output',
@@ -196,7 +205,6 @@ const prepareTypesData = async (
   ): void => {
     if (processedTypes.has(typeName)) return
 
-    // Find the input type definition
     let inputObjectTypes: any[] = []
     if (namespace) {
       inputObjectTypes =
@@ -204,7 +212,6 @@ const prepareTypesData = async (
           ? (dmmf.schema.inputObjectTypes as any)[namespace] || []
           : (dmmf.schema.outputObjectTypes as any)[namespace] || []
     } else {
-      // Check all namespaces when namespace is undefined
       const allTypes =
         typeCategory === 'input'
           ? (dmmf.schema.inputObjectTypes as any)
@@ -270,12 +277,10 @@ const prepareTypesData = async (
     }
   }
 
-  // Determine which input types are needed based on queries and mutations
   const neededInputTypes = new Set<string>()
   const neededOutputTypes = new Set<string>()
   returnTypes.forEach(returnType => neededOutputTypes.add(returnType))
 
-  // Map operation types to required input types
   const operationInputTypeMap: Record<string, string[]> = {
     findUnique: [`${modelName}WhereUniqueInput`],
     findMany: [`${modelName}WhereInput`, `${modelName}OrderByWithRelationInput`],
@@ -298,19 +303,16 @@ const prepareTypesData = async (
 
   neededOutputTypes.add(modelName)
 
-  // Add input types needed for queries
   queries.forEach(queryType => {
     const inputTypesForOperation = operationInputTypeMap[queryType] || []
     inputTypesForOperation.forEach(inputType => neededInputTypes.add(inputType))
   })
 
-  // Add input types needed for mutations
   mutations.forEach(mutationType => {
     const inputTypesForOperation = operationInputTypeMap[mutationType] || []
     inputTypesForOperation.forEach(inputType => neededInputTypes.add(inputType))
   })
 
-  // Process only the needed input types and their dependencies
   neededOutputTypes.forEach(typeName => {
     processType(typeName, 'output')
   })
@@ -319,8 +321,6 @@ const prepareTypesData = async (
     processType(typeName, 'input')
   })
 
-  // Collect and add needed enum types to base.graphql
-  // Add enum types to base.graphql sequentially
   for (const enumName of neededEnums) {
     try {
       await addEnumToBase(enumName, dmmf)
@@ -345,7 +345,6 @@ const prepareOperationsData = (
   const modelNameLower = modelName.charAt(0).toLowerCase() + modelName.slice(1)
   const modelNamePlural = pluralize(modelNameLower, customPlurals)
 
-  // For singular operations, if the model name is already plural, singularize it
   const modelNameSingular = COMMON_PLURALS.has(modelNameLower)
     ? singularize(modelNameLower)
     : modelNameLower
@@ -411,7 +410,6 @@ const prepareOperationsData = (
     .filter((operation): operation is Operation => operation !== null)
 }
 
-// --- Main Orchestrator Function ---
 export async function generateGraphqlModule(
   options: GenerateModuleOptions,
   config: GeneratorConfig,
@@ -424,7 +422,6 @@ export async function generateGraphqlModule(
   const sdlExists = await fileExists(sdlPath)
   const resolverExists = await fileExists(resolverPath)
 
-  // Handle SDL generation
   if (sdlExists) {
     executeHook('onUpdateFile', {
       sdlPath,
@@ -442,7 +439,6 @@ export async function generateGraphqlModule(
     await compileTemplateFile(sdlPath, configData.files.templates.graphqlTemplate, options, config)
   }
 
-  // Handle resolver generation
   if (resolverExists) {
     executeHook('onUpdateFile', {
       sdlPath,
@@ -563,12 +559,10 @@ async function updateSdlFile(
   ]
   const types = await prepareTypesData(dmmf, model.name, queries, mutations, returnTypes)
 
-  // Helper function to parse argument string into AST nodes
   const parseArguments = (argString: string) => {
     if (!argString.trim()) return []
 
     try {
-      // Parse a dummy field to get the arguments structure
       const dummyField = `field(${argString}): String`
       const dummySchema = `type Test { ${dummyField} }`
       const dummyAst = parse(dummySchema)
@@ -580,14 +574,12 @@ async function updateSdlFile(
     }
   }
 
-  // Get existing input type names to avoid duplicates
   const existingInputTypes = new Set(
     ast.definitions
       .filter(def => def.kind === 'InputObjectTypeDefinition')
       .map(def => (def as any).name.value),
   )
 
-  // Add missing input types to the AST
   const inputTypeDefinitions = types.input
     .filter(inputType => !existingInputTypes.has(inputType.name))
     .map(inputType => ({
@@ -639,14 +631,12 @@ async function updateSdlFile(
       })),
     }))
 
-  // Get existing output type names to avoid duplicates
   const existingOutputTypes = new Set(
     ast.definitions
       .filter(def => def.kind === 'ObjectTypeDefinition' && (def as any).name.value !== model.name)
       .map(def => (def as any).name.value),
   )
 
-  // Add missing output types to the AST
   const outputTypeDefinitions = types.output
     .filter(outputType => !existingOutputTypes.has(outputType.name))
     .map(outputType => ({
@@ -675,7 +665,6 @@ async function updateSdlFile(
 
   const modifiedAst = visit(ast, {
     Document(node) {
-      // Add new input and output types at the beginning of the document (after the main type)
       const mainTypeIndex = node.definitions.findIndex(
         def => def.kind === 'ObjectTypeDefinition' && (def as any).name.value === model.name,
       )
@@ -815,7 +804,6 @@ async function updateResolverFile(
     options.customPlurals,
   )
 
-  // Helper function to generate resolver implementation based on operation type
   const getResolverImplementation = (operationType: string, isQuery: boolean = true) => {
     const contextPath = `(await context.dataSources.prisma()).${modelNameLower}`
 
@@ -905,11 +893,9 @@ async function updateResolverFile(
     }
   }
 
-  // Add missing queries
   if (newQueries.length > 0) {
     let queryProperty = resolverObject.getProperty('Query')
 
-    // If Query property doesn't exist, create it
     if (!queryProperty) {
       resolverObject.addPropertyAssignment({
         name: 'Query',
@@ -940,11 +926,9 @@ async function updateResolverFile(
     }
   }
 
-  // Add missing mutations
   if (newMutations.length > 0) {
     let mutationProperty = resolverObject.getProperty('Mutation')
 
-    // If Mutation property doesn't exist, create it
     if (!mutationProperty) {
       resolverObject.addPropertyAssignment({
         name: 'Mutation',
@@ -988,7 +972,6 @@ async function updateResolverFile(
   await sourceFile.save()
 }
 
-// --- New Main Entry Point ---
 export async function generateGraphQLFiles(
   dmmf: DMMF.Document,
   config: {

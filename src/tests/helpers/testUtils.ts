@@ -1,5 +1,3 @@
-// Helper functions for test setup
-// TODO: Implement common test utilities
 
 beforeAll(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {})

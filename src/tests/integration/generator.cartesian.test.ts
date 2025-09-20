@@ -1,4 +1,3 @@
-// Mock ts-morph before any imports that might use it
 jest.mock('ts-morph', () => ({
   Project: jest.fn().mockImplementation(() => ({
     addSourceFileAtPath: jest.fn(),
@@ -46,55 +45,46 @@ jest.mock('../../utils/writeFileSafely')
 jest.mock('../../utils/readExistingFile')
 jest.mock('../../utils/fileExists')
 
-const mockWriteFileSafely = writeFileSafely as jest.MockedFunction<
-  typeof writeFileSafely
->
-const mockReadExistingFile = readExistingFile as jest.MockedFunction<
-  typeof readExistingFile
->
+const mockWriteFileSafely = writeFileSafely as jest.MockedFunction<typeof writeFileSafely>
+const mockReadExistingFile = readExistingFile as jest.MockedFunction<typeof readExistingFile>
 const mockFileExists = fileExists as jest.MockedFunction<typeof fileExists>
 
-// Helper function to capture and normalize generated files for snapshots
 const captureGeneratedOutput = () => {
   const calls = mockWriteFileSafely.mock.calls
 
   const filteredCalls = calls.filter(call => {
-      const filePath = call[0]
-      const fileName = path.basename(filePath)
-      const extension = path.extname(fileName)
-      
-      // Exclude all JSON files (especially options.json with DMMF data)
-      if (extension === '.json') {
-        return false
-      }
-      
-      // Exclude schema.ts (contains generated TypeScript types)
-      if (fileName === 'schema.ts') {
-        return false
-      }
-      
-      // Only include actual generated GraphQL and resolver files
-      const shouldInclude = (filePath.includes('.graphql') || 
-              filePath.includes('.resolver.') || 
-              filePath.includes('.resolvers.')) &&
-             !filePath.includes('dmmf') &&
-             !filePath.includes('config')
-      
-      return shouldInclude
-    })
-  
+    const filePath = call[0]
+    const fileName = path.basename(filePath)
+    const extension = path.extname(fileName)
+
+    if (extension === '.json') {
+      return false
+    }
+
+    if (fileName === 'schema.ts') {
+      return false
+    }
+
+    const shouldInclude =
+      (filePath.includes('.graphql') ||
+        filePath.includes('.resolver.') ||
+        filePath.includes('.resolvers.')) &&
+      !filePath.includes('dmmf') &&
+      !filePath.includes('config')
+
+    return shouldInclude
+  })
+
   return filteredCalls
     .map(call => ({
-      filePath: call[0]
-        .replace(process.cwd(), '<PROJECT_ROOT>')
-        .replace(/\\/g, '/'), // Normalize path separators
+      filePath: call[0].replace(process.cwd(), '<PROJECT_ROOT>').replace(/\\/g, '/'),
       content: call[1]
         .replace(/\/\* Generated at .+ \*\//, '/* Generated at <TIMESTAMP> */')
         .replace(/Generated on: .+/, 'Generated on: <DATE>')
-        .replace(/\r\n/g, '\n') // Normalize line endings
-        .trim() // Remove leading/trailing whitespace
+        .replace(/\r\n/g, '\n')
+        .trim(),
     }))
-    .filter(file => file.content.length > 0) // Remove empty files
+    .filter(file => file.content.length > 0)
 }
 
 describe('Cartesian Product Generator Tests', () => {
@@ -109,69 +99,62 @@ describe('Cartesian Product Generator Tests', () => {
   })
 
   describe('Small Scale Cartesian Product Tests', () => {
-    // Define a focused set of parameters for testing the cartesian product approach
     const testParameters = {
       models: {
         values: ['Employee', 'Category'],
-        multi: false
+        multi: false,
       },
       queries: {
         values: ['findMany', 'findUnique'],
-        multi: true // Can select multiple queries
+        multi: true,
       },
       mutations: {
         values: ['create', 'update'],
-        multi: true // Can select multiple mutations
-      }
+        multi: true,
+      },
     }
 
     const combinations = generateParameterCombinations(testParameters)
 
-    describe.each(combinations)(
-      'Generated combination tests',
-      (models, queries, mutations) => {
-        const model = models[0]
-        const queriesStr = queries.length > 0 ? queries.join(',') : ''
-        const mutationsStr = mutations.length > 0 ? mutations.join(',') : ''
+    describe.each(combinations)('Generated combination tests', (models, queries, mutations) => {
+      const model = models[0]
+      const queriesStr = queries.length > 0 ? queries.join(',') : ''
+      const mutationsStr = mutations.length > 0 ? mutations.join(',') : ''
 
-        // Skip test cases with no operations at all
-        if (queries.length === 0 && mutations.length === 0) {
-          return
+      if (queries.length === 0 && mutations.length === 0) {
+        return
+      }
+
+      it(`should generate files for Model: ${model}, Queries: [${queriesStr}], Mutations: [${mutationsStr}]`, async () => {
+        process.env.GENERATOR_MODEL = model
+        process.env.GENERATOR_MODULE_PATH = './src/modules'
+
+        if (queriesStr) {
+          process.env.GENERATOR_QUERIES = queriesStr
+        }
+        if (mutationsStr) {
+          process.env.GENERATOR_MUTATIONS = mutationsStr
         }
 
-        it(`should generate files for Model: ${model}, Queries: [${queriesStr}], Mutations: [${mutationsStr}]`, async () => {
-          // Set environment variables
-          process.env.GENERATOR_MODEL = model
-          process.env.GENERATOR_MODULE_PATH = './src/modules'
-          
-          if (queriesStr) {
-            process.env.GENERATOR_QUERIES = queriesStr
-          }
-          if (mutationsStr) {
-            process.env.GENERATOR_MUTATIONS = mutationsStr
-          }
+        await onGenerate(options)
 
-          await onGenerate(options)
+        const generatedOutput = captureGeneratedOutput()
 
-          // Capture generated files for snapshot testing
-          const generatedOutput = captureGeneratedOutput()
-          
-          // Create a snapshot-friendly object
-          const snapshot = {
-            scenario: {
-              model,
-              queries: queriesStr || 'none',
-              mutations: mutationsStr || 'none',
-              modulePath: './src/modules'
-            },
-            files: generatedOutput
-          }
+        const snapshot = {
+          scenario: {
+            model,
+            queries: queriesStr || 'none',
+            mutations: mutationsStr || 'none',
+            modulePath: './src/modules',
+          },
+          files: generatedOutput,
+        }
 
-          // Snapshot test the generated output
-          expect(snapshot).toMatchSnapshot(`cartesian-${model}-${queriesStr || 'noQueries'}-${mutationsStr || 'noMutations'}`)
-        })
-      }
-    )
+        expect(snapshot).toMatchSnapshot(
+          `cartesian-${model}-${queriesStr || 'noQueries'}-${mutationsStr || 'noMutations'}`,
+        )
+      })
+    })
   })
 
   // describe('Verify Cartesian Product Generation Count', () => {
@@ -192,7 +175,7 @@ describe('Cartesian Product Generator Tests', () => {
   //     }
 
   //     const combinations = generateParameterCombinations(testParameters)
-      
+
   //     // Expected combinations:
   //     // Models: 2 choices (A, B)
   //     // Queries: 4 subsets ([], [q1], [q2], [q1,q2])
@@ -236,7 +219,7 @@ describe('Cartesian Product Generator Tests', () => {
   //       it(`should generate files for ${model} with operations ${JSON.stringify(queryType)}`, async () => {
   //         process.env.GENERATOR_MODEL = model
   //         process.env.GENERATOR_MODULE_PATH = './src/modules'
-          
+
   //         if (queryType.queries.length > 0) {
   //           process.env.GENERATOR_QUERIES = queryType.queries.join(',')
   //         }
@@ -248,7 +231,7 @@ describe('Cartesian Product Generator Tests', () => {
 
   //         // Capture generated files for snapshot testing
   //         const generatedOutput = captureGeneratedOutput()
-          
+
   //         const snapshot = {
   //           scenario: {
   //             model,

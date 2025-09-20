@@ -1,6 +1,5 @@
 import { GeneratorConfig } from './config'
 
-// Example TypeScript configuration - only override what you need to change
 const config: GeneratorConfig = {
   generator: {
     prettyName: 'Prisma GraphQL Generator',
@@ -24,17 +23,6 @@ const config: GeneratorConfig = {
     baseGraphqlPath: 'src/subgraphs/base.graphql',
     baseModulePath: 'src/subgraphs/',
     presetsFilePath: 'prisma/presets.json',
-  },
-
-  envVars: {
-    model: 'GENERATOR_MODEL',
-    modulePath: 'GENERATOR_MODULE_PATH',
-    operations: 'GENERATOR_OPERATIONS',
-    queries: 'GENERATOR_QUERIES',
-    mutations: 'GENERATOR_MUTATIONS',
-    presetUsed: 'GENERATOR_PRESET_USED',
-    timestamp: 'GENERATOR_TIMESTAMP',
-    customPlurals: 'GENERATOR_CUSTOM_PLURALS',
   },
 
   content: {

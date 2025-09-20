@@ -25,10 +25,8 @@ export class PluginLoader {
   private async loadPlugins(): Promise<void> {
     for (const plugin of this.plugins) {
       try {
-        // If plugin is just a name/path reference, we need to load it
         let actualPlugin: Plugin
         if (typeof plugin === 'string' || 'name' in plugin) {
-          // Load plugin from path or name
           actualPlugin = await this.loadPluginFromPath(plugin)
         } else {
           actualPlugin = plugin

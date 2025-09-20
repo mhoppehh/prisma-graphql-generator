@@ -79,7 +79,6 @@ export class DefaultPluginManager implements PluginManager {
       } catch (error) {
         logger.error(`Error executing hook '${hookName}' in plugin '${plugin.name}':`, error)
 
-        // Execute error hook if this isn't already an error hook
         if (hookName !== 'onError') {
           this.executeHook('onError', {
             ...payload,

@@ -10,24 +10,19 @@ export default {
 
   hooks: {
     onFileWrite: async (payload: OnFileWritePayload) => {
-      // Only format TypeScript and GraphQL files
       if (!payload.writeLocation.match(/\.(ts|js|graphql|gql)$/)) {
         return payload
       }
 
       try {
-        // Read the file content that was just written
         const content = await fs.readFile(payload.writeLocation, 'utf-8')
 
-        // Get prettier config
         const options = await prettier.resolveConfig(process.cwd())
 
         if (!options) {
-          // No prettier config found, skip formatting
           return payload
         }
 
-        // Determine parser based on file extension
         let parser = 'typescript'
         if (payload.writeLocation.match(/\.(graphql|gql)$/)) {
           parser = 'graphql'
@@ -35,7 +30,6 @@ export default {
           parser = 'babel'
         }
 
-        // Format the content
         const formatted = await prettier.format(content, {
           ...options,
           parser,
