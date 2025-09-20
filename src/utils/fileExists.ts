@@ -12,9 +12,7 @@ export interface ExistingFilesInfo {
   resolvers: FileInfo
 }
 
-// Convert model name to proper file/folder naming (User -> user, Blog_Post -> blogPost)
 export const modelToFileName = (modelName: string): string => {
-  // Convert snake_case and PascalCase to camelCase
   return modelName
     .replace(/_([a-zA-Z])/g, (_, c) => c.toUpperCase())
     .replace(/^([A-Z])/, (_, c) => c.toLowerCase())

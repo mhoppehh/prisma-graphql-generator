@@ -72,7 +72,6 @@ export class ConfigLoader {
   private config: GeneratorConfig
 
   constructor(userConfig?: PartialGeneratorConfig) {
-    // Determine final user config: use provided or attempt to load generator.config.json
     let finalUserConfig: PartialGeneratorConfig = {}
     if (userConfig) {
       finalUserConfig = userConfig
@@ -142,7 +141,6 @@ export class ConfigLoader {
       if (configPath.endsWith('.json')) {
         userConfig = JSON.parse(configContent)
       } else if (configPath.endsWith('.js') || configPath.endsWith('.ts')) {
-        // For JS/TS files, we would need to use dynamic imports
         const configModule = await import(fullPath)
         userConfig = configModule.default || configModule
       } else {
@@ -157,5 +155,4 @@ export class ConfigLoader {
   }
 }
 
-// Export a default instance for simple usage
 export const config = new ConfigLoader()

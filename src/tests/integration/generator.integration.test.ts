@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 
-// Mock ts-morph before any imports that might use it
 jest.mock('ts-morph', () => ({
   Project: jest.fn().mockImplementation(() => ({
     addSourceFileAtPath: jest.fn(),
@@ -33,14 +32,12 @@ jest.mock('prettier', () => ({
 jest.setTimeout(15000)
 
 jest.mock('fs', () => {
-  // Require the original module to not break webpack dependencies
   const actualFs = jest.requireActual('fs')
 
   return {
-    ...actualFs, // Preserve all the original functionality
+    ...actualFs,
     promises: {
-      ...actualFs.promises, // Preserve all original promises functionality
-      // Override only the function you want to mock
+      ...actualFs.promises,
       writeFile: jest.fn().mockResolvedValue(undefined),
     },
   }
@@ -78,10 +75,8 @@ const getResolverContent = () => {
 
 const validateGraphQLSDL = (sdlContent: string): { isValid: boolean; errors: string[] } => {
   try {
-    // Try to build a schema from it
     const schema = buildSchema(sdlContent)
 
-    // Validate the schema
     const errors = validateSchema(schema)
 
     return {
@@ -97,12 +92,11 @@ const validateGraphQLSDL = (sdlContent: string): { isValid: boolean; errors: str
 }
 
 export function validateTypeScriptCode(code: string): ts.Diagnostic[] {
-  // Define standard compiler options for validation.
   const compilerOptions: ts.CompilerOptions = {
-    noEmit: true, // Don't generate any output files.
+    noEmit: true,
     target: ts.ScriptTarget.ESNext,
     module: ts.ModuleKind.CommonJS,
-    strict: true, // Enable all strict type-checking options.
+    strict: true,
     esModuleInterop: true,
     skipLibCheck: true,
     forceConsistentCasingInFileNames: true,
@@ -110,29 +104,18 @@ export function validateTypeScriptCode(code: string): ts.Diagnostic[] {
 
   const fileName = 'in-memory-file.ts'
 
-  // Create an in-memory compiler host. This allows the compiler to "read" our
-  // string as if it were a file.
   const host = ts.createCompilerHost(compilerOptions, true)
   const originalGetSourceFile = host.getSourceFile
 
   host.getSourceFile = (name, languageVersion, onError) => {
     if (name === fileName) {
-      // Return our in-memory source file.
-      return ts.createSourceFile(
-        name,
-        code,
-        languageVersion,
-        true, // Set parent pointers.
-      )
+      return ts.createSourceFile(name, code, languageVersion, true)
     }
-    // For lib files (e.g., lib.d.ts), delegate to the original implementation.
     return originalGetSourceFile(name, languageVersion, onError)
   }
 
-  // Create a program from our in-memory file.
   const program = ts.createProgram([fileName], compilerOptions, host)
 
-  // Get all diagnostics (syntactic, semantic, and declaration).
   const diagnostics = ts.getPreEmitDiagnostics(program)
 
   return Array.from(diagnostics)
@@ -161,7 +144,6 @@ describe('Generator Integration Tests', () => {
     mockWriteFileSafely.mockImplementation(() => Promise.resolve(undefined))
   })
 
-  // Define all possible parameter combinations
   const testParameters = {
     models: {
       values: [
@@ -179,35 +161,32 @@ describe('Generator Integration Tests', () => {
         'CustomerCustomerDemo',
         'CustomerDemographic',
       ],
-      multi: false, // Single choice - one model at a time
+      multi: false,
     },
     queries: {
       values: ['findUnique', 'findMany', 'findFirst'],
-      multi: true, // Multi-choice - can have multiple queries
+      multi: true,
     },
     mutations: {
-      // values: ['create'],
       values: ['create', 'createMany', 'update', 'updateMany', 'upsert', 'delete', 'deleteMany'],
-      multi: true, // Multi-choice - can have multiple mutations
+      multi: true,
     },
     modulePaths: {
       values: ['./src/modules', './generated/modules', './api/graphql'],
-      multi: false, // Single choice - one module path at a time
+      multi: false,
     },
   }
 
-  // Generate all combinations using cartesian product
   const parameterCombinations = generateParameterCombinations(testParameters)
 
   describe.each(parameterCombinations)(
     'Parameterized Generation Tests',
     (models, queries, mutations, modulePaths) => {
-      const model = models[0] // Single model from array
+      const model = models[0]
       const queriesStr = queries.length > 0 ? queries.join(',') : ''
       const mutationsStr = mutations.length > 0 ? mutations.join(',') : ''
-      const modulePath = modulePaths[0] // Single module path from array
+      const modulePath = modulePaths[0]
 
-      // Skip combinations with no operations
       if (queries.length === 0 && mutations.length === 0) {
         return
       }
@@ -215,7 +194,6 @@ describe('Generator Integration Tests', () => {
       const testName = `Model: ${model}, Queries: [${queriesStr}], Mutations: [${mutationsStr}], Path: ${modulePath}`
 
       it(`should generate files for ${testName}`, async () => {
-        // Set up environment variables
         process.env.GENERATOR_MODEL = model
         process.env.GENERATOR_MODULE_PATH = modulePath
 
@@ -228,15 +206,12 @@ describe('Generator Integration Tests', () => {
 
         await onGenerate(options)
 
-        // Verify that files were written
         expect(mockWriteFileSafely).toHaveBeenCalled()
         const writeCalls = mockWriteFileSafely.mock.calls
         expect(writeCalls.length).toBeGreaterThan(0)
 
-        // Verify that the model name appears in at least one file path
         expect(writeCalls.some(call => call[0].includes(model))).toBe(true)
 
-        // Verify module path is used correctly
         expect(writeCalls.some(call => call[0].includes(modulePath.replace('./', '')))).toBe(true)
 
         // TODO: Validate generated GraphQL SDL

@@ -11,12 +11,11 @@ import { ConfigLoader, GeneratorConfig, PartialGeneratorConfig } from './config'
  * 2. Default configuration
  */
 export async function loadConfiguration(configPath?: string): Promise<ConfigLoader> {
-  let config = new ConfigLoader() // Start with defaults
+  let config = new ConfigLoader()
 
   if (configPath) {
     try {
       const fileConfig = await ConfigLoader.loadFromFile(configPath)
-      // Use file config
       config = fileConfig
     } catch (error) {
       console.warn(`Failed to load config from ${configPath}, using defaults:`, error)
@@ -30,7 +29,6 @@ export async function loadConfiguration(configPath?: string): Promise<ConfigLoad
  * Get configuration file path from common config file names
  */
 export function getConfigPath(): string | undefined {
-  // Check for common config file names in project root
   const commonConfigFiles = [
     'generator.config.ts',
     'generator.config.js',
@@ -44,7 +42,6 @@ export function getConfigPath(): string | undefined {
       require.resolve(configPath)
       return configPath
     } catch {
-      // File doesn't exist, continue
     }
   }
 
@@ -57,12 +54,10 @@ export function getConfigPath(): string | undefined {
 export function validateConfiguration(config: PartialGeneratorConfig): string[] {
   const errors: string[] = []
 
-  // Validate required generator fields
   if (config.generator?.defaultOutput !== undefined && !config.generator.defaultOutput.trim()) {
     errors.push('Default output path cannot be empty')
   }
 
-  // Validate file extensions
   if (config.files?.extensions) {
     const extensions = config.files.extensions
     if (extensions.graphql !== undefined && !extensions.graphql.startsWith('.')) {
@@ -73,7 +68,6 @@ export function validateConfiguration(config: PartialGeneratorConfig): string[] 
     }
   }
 
-  // Validate template paths
   if (config.files?.templates) {
     const templates = config.files.templates
     if (templates.graphqlTemplate !== undefined && !templates.graphqlTemplate.trim()) {

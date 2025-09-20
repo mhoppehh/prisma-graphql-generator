@@ -6,7 +6,6 @@ import { fileExists } from '../utils/fileExists'
 import { config as generatorConfig } from '../config/config'
 import fs from 'fs/promises'
 
-// Mock dependencies
 jest.mock('../utils/writeFileSafely')
 jest.mock('../utils/fileExists')
 jest.mock('../helpers')
@@ -42,7 +41,7 @@ describe('Generator', () => {
         binaryTargets: [],
         previewFeatures: [],
       },
-      dmmf: {} as any, // Simplified mock for tests
+      dmmf: {} as any,
       datamodel: {} as any,
       datasources: [],
       otherGenerators: [],
@@ -52,14 +51,12 @@ describe('Generator', () => {
 
     jest.clearAllMocks()
 
-    // Default mock implementations
     mockFileExists.mockResolvedValue(false)
     mockReadFile.mockRejectedValue(new Error('File not found'))
   })
 
   describe('onGenerate', () => {
     it('should generate GraphQL files when script options are provided', async () => {
-      // Mock script options file exists and has content
       mockFileExists.mockResolvedValue(true)
       mockReadFile.mockResolvedValue(
         JSON.stringify({
@@ -85,7 +82,6 @@ describe('Generator', () => {
     })
 
     it('should not generate files when model name is missing', async () => {
-      // Mock script options file exists but missing modelName
       mockFileExists.mockResolvedValue(true)
       mockReadFile.mockResolvedValue(
         JSON.stringify({
@@ -139,7 +135,7 @@ describe('Generator', () => {
     })
 
     it('should save options to JSON file', async () => {
-      mockFileExists.mockResolvedValue(false) // No script options
+      mockFileExists.mockResolvedValue(false)
 
       await onGenerate(mockOptions)
 

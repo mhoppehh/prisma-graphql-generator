@@ -7,7 +7,6 @@ import * as path from 'path'
 import { config as generatorConfig } from './src/config/config'
 import { loadExtractedOptions, generateWithOptions } from './src/optionsLoader'
 
-// Type definitions
 interface PrismaModel {
   name: string
   value: string
@@ -35,7 +34,6 @@ interface Presets {
 
 const configData = generatorConfig.getConfig()
 
-// Show usage help
 if (process.argv.includes('--help') || process.argv.includes('-h')) {
   console.log(`
 🚀 Prisma GraphQL Generator
@@ -54,7 +52,6 @@ Options:
   process.exit(0)
 }
 
-// List presets
 if (process.argv.includes('--list') || process.argv.includes('-l')) {
   try {
     const data = fs.readFileSync(configData.files.presetsFilePath, 'utf8')
@@ -94,7 +91,6 @@ async function getPrismaModels(): Promise<PrismaModel[]> {
     const schemaPath = path.join(process.cwd(), 'prisma', 'schema.prisma')
     const schemaContent = fs.readFileSync(schemaPath, 'utf8')
 
-    // Extract model names from schema
     const modelMatches = schemaContent.match(/model\s+(\w+)\s*{/g)
     if (!modelMatches) return []
 
@@ -105,7 +101,6 @@ async function getPrismaModels(): Promise<PrismaModel[]> {
       return {
         name: modelName,
         value: modelName,
-        // Make it easier to find by showing both CamelCase and potential underscore versions
         description: modelName
           .replace(/([A-Z])/g, '_$1')
           .toLowerCase()
@@ -133,17 +128,13 @@ async function scanModuleFolder(
     if (fs.existsSync(moduleDir)) {
       const files = fs.readdirSync(moduleDir)
 
-      // Check for SDL file
       existingFiles.sdl = files.some(file => file.endsWith('.graphql') || file.endsWith('.sdl.js'))
 
-      // Check for resolver files and extract query/mutation names
       files.forEach(file => {
         if (file.includes('queries') || file.includes('query')) {
-          // You could parse the file to extract specific query names
           existingFiles.queries.push(file)
         }
         if (file.includes('mutations') || file.includes('mutation')) {
-          // You could parse the file to extract specific mutation names
           existingFiles.mutations.push(file)
         }
       })
@@ -155,7 +146,6 @@ async function scanModuleFolder(
   return existingFiles
 }
 
-// Helper to singularize model names (basic, for common cases)
 function singularize(name: string): string {
   if (name.endsWith('ies')) return name.slice(0, -3) + 'y'
   if (name.endsWith('ses')) return name.slice(0, -2)
@@ -163,7 +153,6 @@ function singularize(name: string): string {
   return name
 }
 
-// Convert modelName to kebab-case for folder
 function toKebabCase(str: string): string {
   return str
     .replace(/([a-z])([A-Z])/g, '$1-$2')
@@ -176,12 +165,10 @@ async function main(): Promise<void> {
   const presets = await loadPresets()
   const presetNames = Object.keys(presets)
 
-  // Check if preset name was passed as command line argument
   const presetArg = process.argv[2]
   let config: GeneratorConfig
 
   if (presetArg) {
-    // Use preset directly without prompts
     if (presets[presetArg]) {
       config = presets[presetArg]
       console.log(`\n📋 Using preset: ${presetArg}`)
@@ -194,7 +181,6 @@ async function main(): Promise<void> {
         console.log(`✏️  Mutations: ${config.mutations.join(', ')}`)
       console.log('')
 
-      // Skip to execution
       await executeGeneration(config)
       return
     } else {
@@ -232,10 +218,8 @@ async function main(): Promise<void> {
     config = presets[presetName]
     console.log(`\n📋 Using preset: ${presetName}`)
   } else if (action === 'new') {
-    // Get available Prisma models
     const models = await getPrismaModels()
 
-    // Ask for model name first
     let modelQuestion: any
     if (models.length > 0) {
       modelQuestion = {
@@ -262,7 +246,6 @@ async function main(): Promise<void> {
 
     let { modelName } = await inquirer.prompt([modelQuestion])
 
-    // Handle custom input
     if (modelName === 'custom') {
       const { customModelName } = await inquirer.prompt([
         {
@@ -278,10 +261,8 @@ async function main(): Promise<void> {
       modelName = customModelName
     }
 
-    // Convert modelName to kebab-case for folder
     const moduleFolderPath = path.join('.', configData.files.baseModulePath, toKebabCase(modelName))
 
-    // Scan existing files
     const existingFiles = await scanModuleFolder(moduleFolderPath, modelName)
 
     if (
@@ -298,7 +279,6 @@ async function main(): Promise<void> {
       console.log('')
     }
 
-    // Ask about operations
     const operationsResult = await inquirer.prompt({
       type: 'checkbox',
       name: 'operations',
@@ -318,7 +298,6 @@ async function main(): Promise<void> {
     let queries: string[] = []
     let mutations: string[] = []
 
-    // Ask for specific queries if selected
     if (operations.includes('queries')) {
       const singularModel = singularize(modelName)
       const pluralModel = modelName.endsWith('s') ? modelName : modelName + 's'
@@ -349,7 +328,6 @@ async function main(): Promise<void> {
       queries = queriesResult.selectedQueries
     }
 
-    // Ask for specific mutations if selected
     if (operations.includes('mutations')) {
       const singularModel = singularize(modelName)
       const pluralModel = modelName.endsWith('s') ? modelName : modelName + 's'
@@ -411,7 +389,6 @@ async function main(): Promise<void> {
       console.log(`✅ Preset "${presetName}" saved!`)
     }
   } else {
-    // Quick mode with defaults
     const models = await getPrismaModels()
     let modelName: string
 
@@ -451,7 +428,6 @@ async function main(): Promise<void> {
     }
   }
 
-  // Execute generation
   await executeGeneration(config)
 }
 

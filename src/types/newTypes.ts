@@ -1,6 +1,5 @@
 import { DMMF } from '@prisma/generator-helper'
 
-// --- Core Generator Types ---
 export interface GenerateModuleOptions {
   model: DMMF.Model
   queries: string[]
@@ -28,7 +27,6 @@ export interface ExistingFiles {
   resolverPath?: string
 }
 
-// --- Template Data Types ---
 export interface GraphQLField {
   name: string
   type: string
@@ -72,7 +70,7 @@ export interface Operation {
   args: string
   returnType: string
   description: string
-  operationType: string // e.g., 'create', 'update'
+  operationType: string
 }
 
 export interface HandlebarsTemplateData {
@@ -95,7 +93,6 @@ export interface HandlebarsTemplateData {
   errorMessageTemplate?: string
 }
 
-// --- GraphQL AST Types ---
 export interface GqlAttrsObject {
   ['@gqlIgnore']?: boolean
   ['@gqlType']?: string
@@ -108,7 +105,6 @@ export interface ItemType {
   isRequired: boolean
 }
 
-// --- Utility Types ---
 export type OperationType =
   | 'findUnique'
   | 'findMany'

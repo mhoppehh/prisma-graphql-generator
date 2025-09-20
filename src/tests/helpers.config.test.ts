@@ -4,7 +4,6 @@ import { fileExists } from '../utils/fileExists'
 import { config as generatorConfig } from '../config/config'
 import patchedOptions from './__fixtures__/options.patched'
 
-// Mock dependencies
 jest.mock('../utils/fileExists')
 jest.mock('../utils/writeFileSafely')
 jest.mock('../utils/formatFile', () => ({
@@ -19,9 +18,8 @@ describe('helpers with configuration', () => {
   let mockOptions: GenerateModuleOptions
 
   beforeEach(() => {
-    // Use the comprehensive mock data from fixture files
     mockOptions = {
-      model: patchedOptions.dmmf.datamodel.models[0], // Use Employee model
+      model: patchedOptions.dmmf.datamodel.models[0],
       queries: ['findMany', 'findUnique', 'findFirst'],
       mutations: ['create', 'update', 'delete'],
       modulePath: './src/modules',
@@ -37,7 +35,6 @@ describe('helpers with configuration', () => {
       const configData = generatorConfig.getConfig()
       mockFileExists.mockResolvedValue(false)
 
-      // Mock the file system operations
       const fs = require('fs/promises')
       fs.readFile = jest.fn().mockResolvedValue('template content')
       
@@ -52,7 +49,6 @@ describe('helpers with configuration', () => {
         mutations: mockOptions.mutations
       })
 
-      // Check that files are checked with configurable extensions
       const expectedSdlPath = `src/modules/Employee${configData.files.extensions.graphql}`
       const expectedResolverPath = `src/modules/Employee${configData.files.extensions.resolver}`
 
@@ -64,7 +60,6 @@ describe('helpers with configuration', () => {
       const configData = generatorConfig.getConfig()
       mockFileExists.mockResolvedValue(false)
 
-      // Mock file system operations
       const fs = require('fs/promises')
       fs.readFile = jest.fn().mockResolvedValue('template content')
       
@@ -79,7 +74,6 @@ describe('helpers with configuration', () => {
         mutations: mockOptions.mutations
       })
 
-      // Check that configurable template paths are used
       expect(fs.readFile).toHaveBeenCalledWith(
         expect.stringContaining(configData.files.templates.graphqlTemplate),
         'utf-8'
@@ -91,7 +85,6 @@ describe('helpers with configuration', () => {
     })
 
     it('should handle custom file extensions', async () => {
-      // Update config for this test
       const originalConfig = generatorConfig.getConfig()
       
       generatorConfig.updateConfig({
@@ -106,7 +99,6 @@ describe('helpers with configuration', () => {
 
       mockFileExists.mockResolvedValue(false)
 
-      // Mock file system operations
       const fs = require('fs/promises')
       fs.readFile = jest.fn().mockResolvedValue('template content')
       
@@ -123,7 +115,6 @@ describe('helpers with configuration', () => {
 
       const configData = generatorConfig.getConfig()
 
-      // Check updated extensions are used
       const expectedSdlPath = `src/modules/Employee${configData.files.extensions.graphql}`
       const expectedResolverPath = `src/modules/Employee${configData.files.extensions.resolver}`
 
